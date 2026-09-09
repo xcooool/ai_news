@@ -1,0 +1,26 @@
+services:
+  xiaohongshu:
+    image: ${XHS_IMAGE:-xpzouying/xiaohongshu-mcp:latest}
+    profiles: [xiaohongshu]
+    ports:
+      - "127.0.0.1:18060:18060"
+    environment:
+      COOKIES_PATH: /app/data/cookies.json
+      AUTH_TOKEN: ${XHS_MCP_TOKEN:-}
+    volumes:
+      - xhs-data:/app/data
+    restart: unless-stopped
+
+  rsshub:
+    image: ${RSSHUB_IMAGE:-diygod/rsshub:chromium-bundled}
+    profiles: [rsshub]
+    ports:
+      - "127.0.0.1:1200:1200"
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: memory
+      ZHIHU_COOKIES: ${ZHIHU_COOKIES:-}
+    restart: unless-stopped
+
+volumes:
+  xhs-data:

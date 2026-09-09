@@ -15,6 +15,7 @@
           <h1>发现下一个值得销售触达和技术跟进的 AI 项目</h1>
         </div>
         <div class="top-actions">
+          <button id="connectionsBtn" class="ghost">自动采集连接</button>
           <button id="refreshBtn" class="primary">刷新真实来源</button>
           <button id="exportBtn" class="ghost">导出 JSON</button>
         </div>
@@ -96,6 +97,26 @@
       </main>
 
       <section id="detailDrawer" class="drawer hidden" aria-live="polite"></section>
+      <dialog id="connectionsDialog" class="connections-dialog">
+        <div class="panel-head"><h2>自动采集连接</h2><button id="closeConnections" class="ghost" type="button">关闭</button></div>
+        <form id="connectionsForm">
+          <label>搜索与筛选关键词<textarea name="keywords" class="input" rows="3" placeholder="每行一个关键词"></textarea></label>
+          <label>小红书 MCP 服务地址<input name="xhsBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:18060" /></label>
+          <p class="hint">小红书服务需先扫码登录。<a href="https://github.com/xpzouying/xiaohongshu-mcp" target="_blank" rel="noopener noreferrer">项目与登录说明</a></p>
+          <label>WeWe RSS 服务地址<input name="weweBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:4000" /></label>
+          <label>公众号订阅 ID<textarea name="wechatFeedIds" class="input" rows="2" placeholder="all 或每行一个订阅 ID"></textarea></label>
+          <p class="hint">在 WeWe RSS 扫码并添加公众号后自动更新。<a href="https://github.com/cooderl/wewe-rss" target="_blank" rel="noopener noreferrer">项目与订阅说明</a></p>
+          <label>RSSHub 服务地址<input name="rsshubBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:1200" /></label>
+          <label>知乎作者主页或订阅路由<textarea name="zhihu" class="input" rows="2" placeholder="https://www.zhihu.com/people/作者ID"></textarea></label>
+          <label>即刻圈子、用户主页或订阅路由<textarea name="jike" class="input" rows="2" placeholder="https://web.okjike.com/topic/圈子ID"></textarea></label>
+          <label>抖音博主主页或订阅路由<textarea name="douyin" class="input" rows="2" placeholder="https://www.douyin.com/user/用户ID"></textarea></label>
+          <label>B站订阅路由<textarea name="bilibili" class="input" rows="2" placeholder="每行一个 /bilibili/ 开头的订阅路由"></textarea></label>
+          <label>36氪订阅路由<textarea name="36kr" class="input" rows="2" placeholder="每行一个 /36kr/ 开头的订阅路由"></textarea></label>
+          <p class="hint"><a href="https://github.com/DIYgod/RSSHub" target="_blank" rel="noopener noreferrer">RSSHub 路由与部署说明</a> · 登录 Cookie 在采集服务中配置。</p>
+          <p id="connectionsError" class="hint" role="alert"></p>
+          <button type="submit" class="primary">保存连接</button>
+        </form>
+      </dialog>
       <div id="toast" class="toast hidden"></div>
     </div>
     <script type="module" src="/app.js"></script>

@@ -27,6 +27,10 @@ COLLECT_LIMIT=12
 
 ## 采集与定时
 
+国内来源现已接入自动采集适配器：小红书 MCP 搜索/详情、WeWe RSS 公众号订阅、RSSHub 知乎/即刻/抖音/B站/36氪订阅。点击“自动采集连接”配置服务和目标，首次登录后无需逐篇手动导入。已配置不等于已登录；失败状态会记录并显示。
+
+部署、skills 调研与具体配置见 [国内自动采集指南](docs/domestic-automation.md)。外部服务尚未在当前受限环境启动或实采验证。
+
 手动刷新：
 
 ```bash
@@ -67,3 +71,5 @@ npm run build
 ```
 
 `npm test` 覆盖 0 来源、0 权重、0 证据和单一高分维度折减。`npm run build` 做轻量结构验证，不会打包外部依赖。
+
+国内适配器另有模拟 HTTP 契约测试，覆盖登录失效、部分失败、原文链接、JSON Feed 和来源状态。`npm run preview` 生成 `outputs/preview.html` 离线只读预览。

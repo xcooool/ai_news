@@ -31,6 +31,8 @@ const sourceStatusLabel = {
   commercial: "需商业授权",
   manual: "可手动导入",
   unverified: "未验证",
+  needs_setup: "自动采集 · 待配置",
+  configured: "自动采集 · 已配置",
 };
 
 await loadState();
@@ -58,6 +60,9 @@ async function loadState() {
 }
 
 function bindEvents() {
+  $("#connectionsBtn").addEventListener("click", openConnections);
+  $("#closeConnections").addEventListener("click", () => $("#connectionsDialog").close());
+  $("#connectionsForm").addEventListener("submit", saveConnections);
   $("#refreshBtn").addEventListener("click", refreshSources);
   $("#exportBtn").addEventListener("click", () => window.open("/api/export", "_blank"));
   $("#sourceSearch").addEventListener("input", (event) => {
@@ -124,6 +129,7 @@ function renderSources() {
             </span>
             <small>${regionText(source.region)} · trust ${source.trust} · ${source.env || "无需 env"}</small>
             <small>${escapeHtml(source.notes)}</small>
+            ${source.connection ? `<small>${connectionText(source.connection)}</small>` : ""}
           </span>
         </label>`,
     )
@@ -209,7 +215,7 @@ function itemCard(item) {
       <div>
         <div class="item-title">
           <h3>${primaryUrl ? externalLink(primaryUrl, item.name) : escapeHtml(item.name)}</h3>
-          <span class="pill">${item.type === "open_source" ? "开源项目" : "创业公司"}</span>
+          <span class="pill">${item.collection?.entityVerified === false ? "待核实线索" : item.type === "open_source" ? "开源项目" : "创业公司"}</span>
           <span class="pill">${statusLabel[item.status] ?? item.status}</span>
           ${item.sampleMode ? '<span class="pill commercial">示例模式</span>' : ""}
         </div>
@@ -259,6 +265,9 @@ function openDetail(id) {
         </div>
         <button id="closeDrawer" class="ghost">关闭</button>
       </div>
+      <section>
+        ${item.content ? `<h3>采集正文</h3><pre class="collected-content">${escapeHtml(contentText(item.content) || "未取得正文，请打开原始链接。")}</pre>` : ""}
+      </section>
       <section>
         <h3>指数链路</h3>
         <p class="hint">${escapeHtml(item.scoring.reason)} 当前指数不混入 Kimi 商业匹配。</p>
@@ -404,7 +413,7 @@ async function refreshSources() {
   try {
     const implemented = state.selectedSourceIds.filter((id) => {
       const source = state.sources.find((entry) => entry.id === id);
-      return source?.status === "implemented";
+      return source?.status === "implemented" || source?.automatic;
     });
     const result = await fetchJson("/api/refresh", {
       method: "POST",
@@ -422,7 +431,8 @@ async function refreshSources() {
 
 async function importMaterial(event) {
   event.preventDefault();
-  const form = new FormData(event.currentTarget);
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
   const body = Object.fromEntries(form.entries());
   const button = event.currentTarget.querySelector("button");
   button.disabled = true;
@@ -430,7 +440,7 @@ async function importMaterial(event) {
   try {
     const result = await fetchJson("/api/import", { method: "POST", body: JSON.stringify(body) });
     toast(result.extracted.warning || "导入完成");
-    event.currentTarget.reset();
+    formElement.reset();
     await loadState();
   } catch (error) {
     toast(`导入失败：${error.message}`);
@@ -518,5 +528,54 @@ function itemLinks(item) {
     .map((entry) => safeUrl(entry.url)).filter(Boolean);
   const urls = [...new Set([...projectUrls, ...sourceUrls])];
   if (!urls.length) return '<p class="hint">尚未收录原始链接。</p>';
-  return `<div class="item-links">${urls.map((url) => `<div><span>${projectUrls.includes(url) ? "项目链接" : "证据来源"}</span>${externalLink(url)}</div>`).join("")}</div>`;
+  return `<div class="item-links">${urls.map((url) => `<div><span>${item.collection?.entityVerified === false ? "内容原文" : projectUrls.includes(url) ? "项目链接" : "证据来源"}</span>${externalLink(url)}</div>`).join("")}</div>`;
+}
+
+function connectionText(connection) {
+  const labels = { not_tested: "尚未执行采集", ok: "最近采集成功", partial: "最近采集部分成功", error: "最近采集失败", needs_login: "需要登录", needs_setup: "需要配置", unreachable: "服务不可达", rate_limited: "上游限流", upstream_error: "上游服务异常", invalid_response: "接口响应异常" };
+  return `${labels[connection.state] || "采集异常"}${connection.at ? ` · ${dateText(connection.at)} · ${connection.itemCount} 条` : ""}`;
+}
+
+function contentText(content) {
+  if (content.text) return content.text;
+  if (!content.html) return "";
+  // Template contents remain inert; only extracted text enters the live page.
+  const template = document.createElement("template");
+  template.innerHTML = content.html;
+  template.content.querySelectorAll("script,style,noscript").forEach(node => node.remove());
+  template.content.querySelectorAll("p,div,br,li,h1,h2,h3").forEach(node => node.append(document.createTextNode("\n")));
+  return template.content.textContent.trim();
+}
+
+async function openConnections() {
+  try {
+    const config = await fetchJson("/api/connectors");
+    const form = $("#connectionsForm");
+    for (const key of ["xhsBaseUrl", "weweBaseUrl", "rsshubBaseUrl"]) form.elements.namedItem(key).value = config[key];
+    for (const key of ["keywords", "wechatFeedIds"]) form.elements.namedItem(key).value = config[key].join("\n");
+    for (const [key, routes] of Object.entries(config.routes)) form.elements.namedItem(key).value = routes.join("\n");
+    $("#connectionsError").textContent = "";
+    $("#connectionsDialog").showModal();
+  } catch (error) { toast(error.message); }
+}
+
+async function saveConnections(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const data = Object.fromEntries(new FormData(form));
+  const lines = value => value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  const config = {
+    xhsBaseUrl: data.xhsBaseUrl, weweBaseUrl: data.weweBaseUrl, rsshubBaseUrl: data.rsshubBaseUrl,
+    keywords: lines(data.keywords), wechatFeedIds: lines(data.wechatFeedIds),
+    routes: Object.fromEntries(["zhihu", "jike", "douyin", "bilibili", "36kr"].map(id => [id, lines(data[id])])),
+  };
+  const button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
+  try {
+    await fetchJson("/api/connectors", { method: "POST", body: JSON.stringify(config) });
+    await loadState();
+    $("#connectionsDialog").close();
+    toast("连接配置已保存，请勾选来源并刷新。");
+  } catch (error) { $("#connectionsError").textContent = error.message; }
+  finally { button.disabled = false; }
 }

@@ -10,6 +10,8 @@
     "dev": "node server.mjs",
     "start": "node server.mjs",
     "collect": "node scripts/collect.mjs",
+    "connectors:configure": "node scripts/configure-connectors.mjs",
+    "preview": "node scripts/preview.mjs",
     "build": "node scripts/validate.mjs",
     "test": "node --test"
   },

@@ -8,13 +8,13 @@
 | Product Hunt | 缺 API key | `PRODUCTHUNT_TOKEN` | https://api.producthunt.com/v2/docs | launch、upvotes、comments | 需要 token；launch 热度不等于留存 |
 | Reddit | 缺 API key | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` | https://www.reddit.com/dev/api/ | subreddit/post/comment | OAuth、速率限制、营销噪声 |
 | X / Twitter | 需商业授权 | `X_BEARER_TOKEN` | https://developer.x.com/en/docs | tweet/search/engagement，取决于套餐 | 成本和反爬限制高，bot/转发噪声高 |
-| 微信公众号文章 | 可手动导入 | 无 | https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html | URL+正文粘贴 | 无公开全网采集 API；转载需去重 |
-| 小红书 | 可手动导入 | 无 | https://www.xiaohongshu.com/ | URL+正文粘贴 | 无稳定公开 API |
-| 抖音 | 可手动导入 | 无 | https://developer.open-douyin.com/ | 授权账号/手动材料 | 开放平台不提供全站搜索 |
-| B站 | 可手动导入 | 无 | https://openhome.bilibili.com/ | 手动材料 | 开放能力偏账号合作 |
-| 即刻 | 可手动导入 | 无 | https://web.okjike.com/ | 手动材料 | 无公开采集 API |
-| 知乎 | 可手动导入 | 无 | https://www.zhihu.com/ | 手动材料 | 无稳定公开搜索 API |
-| 36氪 / 创投媒体 | 可手动导入 | 无 | https://36kr.com/ | 手动材料 | 区分媒体事实、采访自述、转载 |
+| 微信公众号文章 | 自动适配已实现，待服务配置 | 无 | https://github.com/cooderl/wewe-rss | 订阅公众号 JSON Feed、正文与 URL | 首次登录与订阅；部分请求经上游第三方中转 |
+| 小红书 | 自动适配已实现，待扫码 | `XHS_MCP_TOKEN` 可选 | https://github.com/xpzouying/xiaohongshu-mcp | 搜索、笔记详情、互动、签名原文链接 | 需启动服务和扫码；登录过期/限流会报错 |
+| 抖音 | RSSHub 自动适配已实现 | 在服务端配置 | https://github.com/DIYgod/RSSHub/tree/master/lib/routes/douyin | 博主订阅 | 需要浏览器；未在本机实采验证 |
+| B站 | RSSHub 自动适配已实现 | 在服务端配置 | https://github.com/DIYgod/RSSHub/tree/master/lib/routes/bilibili | 已配置的订阅路由 | 具体路由未在本机实采验证 |
+| 即刻 | RSSHub 自动适配已实现 | 无 | https://github.com/DIYgod/RSSHub/tree/master/lib/routes/jike | 圈子、用户动态 | 需目标 ID；网页变化可能影响路由 |
+| 知乎 | RSSHub 自动适配已实现 | RSSHub 的 `ZHIHU_COOKIES` 按需 | https://github.com/DIYgod/RSSHub/tree/master/lib/routes/zhihu | 作者回答等订阅 | 平台访问限制；已配置不代表已登录 |
+| 36氪 / 创投媒体 | RSSHub 自动适配已实现 | 无 | https://github.com/DIYgod/RSSHub/tree/master/lib/routes/36kr | 新闻订阅、关键词筛选 | 具体路由未在本机实采验证 |
 | 投资机构 / 孵化器项目名单 | 可手动导入 | 无 | https://www.ycombinator.com/companies | 批次、公司名单、简介 | 入选不能单独证明产品成立 |
 | 公司 / 产品官网 | 可手动导入 | 无 | 各官网 | 定位、客户、价格、API 文档 | 公司自述，默认可信度低于事实 |
 | 更新日志 / API 文档 | 可手动导入 | 无 | 各产品文档 | 更新频率、接口、能力 | 证明交付，不证明需求 |
@@ -27,7 +27,7 @@
 1. 立即可用：GitHub、Hacker News、Hugging Face、手动导入。
 2. 需要 key：Product Hunt、Reddit。
 3. 需要商业授权或合规评估：X、Similarweb、Crunchbase、PitchBook 等。
-4. 无稳定公开 API：微信、小红书、抖音、B站、即刻、知乎等国内内容平台。第一版按人工导入或授权数据商处理。
+4. 国内自动采集：先部署对应服务并登录，再配置订阅或搜索词。详见 [调研与接入指南](../domestic-automation.md)。
 
 ## 数据标注要求
 

@@ -6,6 +6,7 @@ import { runCollectors, extractManualMaterial } from "./lib/collectors.mjs";
 import { sourceCatalog, implementedSourceIds } from "./lib/sources.mjs";
 import { defaultWeights, openSourceDimensions, scoreItems, startupDimensions, kimiDimensions } from "./lib/scoring.mjs";
 import { importMaterial, readStore, updateItemStatus, updateSettings, upsertItems } from "./lib/store.mjs";
+import { readConnectors, saveConnectors, catalogWithConnections } from "./lib/connectors.mjs";
 
 const PORT = Number(process.env.PORT || 3000);
 const PUBLIC_DIR = path.join(process.cwd(), "public");
@@ -46,7 +47,7 @@ async function handleApi(request, response, url) {
     );
     sendJson(response, 200, {
       items,
-      sources: sourceCatalog,
+      sources: catalogWithConnections(sourceCatalog, await readConnectors(), store.runs),
       dimensions: { open_source: openSourceDimensions, startup: startupDimensions, kimi_fit: kimiDimensions },
       settings: store.settings,
       selectedSourceIds,
@@ -62,7 +63,18 @@ async function handleApi(request, response, url) {
   }
 
   if (request.method === "GET" && url.pathname === "/api/sources") {
-    sendJson(response, 200, { sources: sourceCatalog, implementedSourceIds: implementedSourceIds() });
+    sendJson(response, 200, { sources: catalogWithConnections(sourceCatalog, await readConnectors(), (await readStore()).runs), implementedSourceIds: implementedSourceIds() });
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/connectors") {
+    sendJson(response, 200, await readConnectors());
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/connectors") {
+    try { sendJson(response, 200, await saveConnectors(await readBody(request))); }
+    catch (error) { sendJson(response, 400, { error: error.message }); }
     return;
   }
 

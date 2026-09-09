@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 潜力监测工作台</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AI 开源项目 / 创业公司潜力监测</p>
+          <h1>发现下一个值得销售触达和技术跟进的 AI 项目</h1>
+        </div>
+        <div class="top-actions">
+          <button id="refreshBtn" class="primary">刷新真实来源</button>
+          <button id="exportBtn" class="ghost">导出 JSON</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel sources-panel">
+          <div class="panel-head">
+            <h2>来源</h2>
+            <span id="sourceCount" class="pill"></span>
+          </div>
+          <div class="segmented" role="group" aria-label="来源地区">
+            <button data-region="all" class="active">全部</button>
+            <button data-region="china">国内</button>
+            <button data-region="overseas">海外</button>
+            <button data-region="mixed">混合</button>
+          </div>
+          <input id="sourceSearch" class="input" placeholder="搜索平台 / 状态 / env" />
+          <div id="sourcesList" class="sources-list"></div>
+        </aside>
+
+        <section class="center">
+          <section class="panel controls">
+            <div class="tabs" role="tablist">
+              <button data-type="all" class="active">全部</button>
+              <button data-type="open_source">开源项目</button>
+              <button data-type="startup">创业公司</button>
+            </div>
+            <div class="filters">
+              <input id="itemSearch" class="input" placeholder="搜索名称、证据、来源" />
+              <select id="statusFilter" class="input">
+                <option value="all">全部状态</option>
+                <option value="new">新发现</option>
+                <option value="watching">关注</option>
+                <option value="researched">已研究</option>
+                <option value="ignored">忽略</option>
+              </select>
+              <label class="checkline">
+                <input id="sampleToggle" type="checkbox" checked />
+                显示示例
+              </label>
+            </div>
+          </section>
+
+          <section id="runBanner" class="run-banner hidden"></section>
+          <section id="itemsList" class="items-list"></section>
+        </section>
+
+        <aside class="right-rail">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>权重</h2>
+              <button id="saveWeightsBtn" class="small">保存</button>
+            </div>
+            <p class="hint">基础权重是可调启发式，不是已验证预测模型；来源筛选后按证据覆盖率生成有效权重。</p>
+            <div id="weightsPanel"></div>
+          </section>
+
+          <section class="panel import-panel">
+            <div class="panel-head">
+              <h2>手动导入</h2>
+              <span id="modelBadge" class="pill"></span>
+            </div>
+            <form id="importForm">
+              <div class="two">
+                <select name="type" class="input">
+                  <option value="startup">创业公司</option>
+                  <option value="open_source">开源项目</option>
+                </select>
+                <select name="sourceId" id="importSource" class="input"></select>
+              </div>
+              <input name="name" class="input" placeholder="项目/公司名称" required />
+              <input name="url" class="input" placeholder="来源 URL，可选" />
+              <textarea name="text" class="input" rows="7" placeholder="粘贴正文、官网、招聘、媒体报道或社区讨论" required></textarea>
+              <button class="primary full" type="submit">导入并抽取证据</button>
+            </form>
+          </section>
+        </aside>
+      </main>
+
+      <section id="detailDrawer" class="drawer hidden" aria-live="polite"></section>
+      <div id="toast" class="toast hidden"></div>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

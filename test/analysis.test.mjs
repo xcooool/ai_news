@@ -84,11 +84,13 @@ test('mention events include repo creation and collection sightings for github i
     name: 'acme/agent',
     urls: ['https://github.com/acme/agent'],
     discoveredAt: '2026-09-09T10:00:00Z',
+    lastSeenAt: '2026-09-10T11:00:00Z',
     facts: [{ kind: 'created_at', value: '2026-09-01T00:00:00Z' }],
     collection: { sourceId: 'github', publishedAt: '2026-09-08T00:00:00Z' },
   });
   assert.ok(events.some(e => e.kind === 'repo_created'));
   assert.ok(events.some(e => e.kind === 'sighting'));
+  assert.ok(events.some(e => e.kind === 'resighting'));
   const item = buildAnalysis(store([{
     id: 'r1',
     type: 'open_source',
@@ -100,10 +102,13 @@ test('mention events include repo creation and collection sightings for github i
     ],
     collection: { sourceId: 'github' },
     discoveredAt: '2026-09-09T10:00:00Z',
+    lastSeenAt: '2026-09-10T11:00:00Z',
   }]), { now: new Date('2026-09-09T12:00:00Z') }).items[0];
   assert.equal(item.metrics.ageDays, 8.5);
   assert.equal(item.metrics.starsPerDay, 9.4);
   assert.ok(item.heat > 0);
+  assert.ok(!item.mentions.some(m => m.kind === 'sighting' || m.kind === 'resighting'));
+  assert.ok(item.mentions.some(m => m.kind === 'repo_created'));
 });
 
 test('star hourly velocity uses measured intervals, retaining unknown for single or too-close snapshots',async()=>{

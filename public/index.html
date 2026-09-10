@@ -20,7 +20,7 @@
           <button id="phaseAnalyzeBtn" class="phase-tab" data-phase="analyze" type="button">② 分析</button>
         </nav>
         <div class="top-actions">
-          <button id="collectBtn" class="primary collect-header-btn" type="button">开始采集</button>
+          <button id="collectBtn" class="primary collect-header-btn" type="button">一键采集</button>
           <div id="collectProgress" class="collect-progress hidden" aria-live="polite">
             <div class="progress-ring" aria-hidden="true">
               <svg viewBox="0 0 36 36">
@@ -50,13 +50,8 @@
             <div class="sources-panel-body">
               <div class="panel-head sources-panel-head">
                 <button id="collapseSourcesBtn" class="sidebar-toggle" type="button" title="折叠来源面板">‹</button>
-                <h2>采集来源</h2>
+                <h2>采集设置</h2>
                 <span id="sourceCount" class="pill"></span>
-              </div>
-              <div class="source-flow-hint">
-                <div class="flow-step"><span class="flow-num">1</span><span>勾选要拉数据的来源</span></div>
-                <div class="flow-step"><span class="flow-num">2</span><span>设置<strong>条数</strong>和<strong>时间段</strong></span></div>
-                <div class="flow-step"><span class="flow-num">3</span><span>点「开始采集」写入本地库</span></div>
               </div>
               <section class="source-section collect-options-section">
                 <h3>采集参数</h3>
@@ -83,35 +78,7 @@
                 <p id="collectOptionsHint" class="hint">GitHub 按创建时间、HN 按发帖时间、RSS/社交按发布时间过滤。</p>
               </section>
               <section class="source-section">
-                <div class="source-section-head">
-                  <h3>来源列表</h3>
-                </div>
-                <div class="source-select-bar">
-                  <label class="source-select-all">
-                    <input id="selectAllVisibleCheckbox" type="checkbox" />
-                    <span>全选当前</span>
-                  </label>
-                  <div class="source-select-actions">
-                    <button id="selectAllSources" class="ghost small" type="button">全选全部</button>
-                    <button id="invertSources" class="ghost small" type="button">反选</button>
-                    <button id="clearAllSources" class="ghost small" type="button">清空</button>
-                  </div>
-                </div>
-                <div class="segmented source-availability" role="group" aria-label="来源可用性">
-                  <button data-availability="all" class="active" type="button">全部</button>
-                  <button data-availability="ready" type="button">可用</button>
-                  <button data-availability="unavailable" type="button">需配置</button>
-                </div>
-                <div class="segmented" role="group" aria-label="来源地区">
-                  <button data-region="all" class="active" type="button">全部</button>
-                  <button data-region="china" type="button">国内</button>
-                  <button data-region="overseas" type="button">海外</button>
-                  <button data-region="mixed" type="button">混合</button>
-                </div>
-                <div class="search-input">
-                  <span class="search-icon">⌕</span>
-                  <input id="sourceSearch" class="input" placeholder="搜索平台…" />
-                </div>
+                <div class="source-section-head"><h3>账号登录</h3></div>
                 <div id="sourcesList" class="sources-list"></div>
                 <p id="sourceSelectionStatus" class="source-selection-status"></p>
               </section>

@@ -1279,7 +1279,9 @@ textarea.input {
   position: sticky;
   top: 57px;
   z-index: 10;
-  padding: 12px 16px;
+  padding: 12px 18px 0;
+  border-bottom: none;
+  background: var(--bg);
 }
 
 .analyze-toolbar {
@@ -1287,10 +1289,16 @@ textarea.input {
   grid-template-columns: 1fr auto;
   gap: 10px 12px;
   align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .analyze-toolbar .tabs {
   grid-column: 1 / -1;
+  background: var(--bg);
 }
 
 .analyze-search {
@@ -1639,17 +1647,23 @@ textarea.input {
 
 .drawer {
   position: fixed;
-  inset: 0 0 0 auto;
-  width: min(720px, 100vw);
+  inset: 0;
   z-index: 50;
-  overflow: auto;
-  border-left: 1px solid var(--line);
-  background: var(--surface);
-  box-shadow: -8px 0 32px rgb(0 0 0 / 8%);
+  display: flex;
+  justify-content: flex-end;
+  background: rgb(15 23 20 / 32%);
+  cursor: pointer;
 }
 
 .drawer-inner {
+  width: min(720px, 100vw);
+  height: 100%;
+  overflow: auto;
   padding: 20px;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: -8px 0 32px rgb(0 0 0 / 12%);
+  cursor: default;
 }
 
 .drawer-head {
@@ -2000,3 +2014,10 @@ textarea.input {
     grid-template-columns: 1fr;
   }
 }
+/* Compact account controls in the collapsible collection sidebar. */
+.login-source-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.login-source-row > div { min-width: 0; }
+.login-source-row strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.login-source-row small { display: block; margin-top: 5px; color: var(--muted); }
+.login-source-row button { flex-shrink: 0; }
+#sourceCount:empty { display: none; }

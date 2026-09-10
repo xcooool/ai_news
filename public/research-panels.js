@@ -66,8 +66,9 @@ export function teamView(r = {}) {
 }
 
 function scoreRow(d) {
-  const value = d.score == null ? "未知" : Math.round(d.score);
-  return `<article class="score-row"><div><b>${esc(d.name)}</b><p>${esc(d.reason || "")}</p>${d.source ? citation(d) : ""}</div><strong>${esc(value)}</strong></article>`;
+  const value = d.score == null ? null : Math.min(100, Math.max(0, d.score));
+  const label = d.score == null ? "未知" : Math.round(d.score);
+  return `<article class="score-row"><div class="score-row-head"><b>${esc(d.name)}</b><strong>${esc(label)}</strong></div>${value != null ? `<div class="score-bar"><span style="width:${value}%"></span></div>` : ""}<p>${esc(d.reason || "")}</p>${d.source ? citation(d) : ""}</article>`;
 }
 
 function dimensionMeter(d) {

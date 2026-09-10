@@ -747,26 +747,111 @@
     }
   ],
   "wechat": [
-    { "id": "MP_WXS_3008194875", "name": "红杉汇", "enabled": true },
-    { "id": "MP_WXS_2391975620", "name": "纪源资本", "note": "原 GGV；今日资本官方公号未检索到", "enabled": true },
-    { "id": "MP_WXS_3078999138", "name": "经纬创投", "enabled": true },
-    { "id": "MP_WXS_2394991041", "name": "真格基金", "enabled": true },
-    { "id": "MP_WXS_3975857914", "name": "奇绩创坛Miracleplus", "enabled": true },
-    { "id": "MP_WXS_3888004733", "name": "高瓴创投", "enabled": true },
-    { "id": "MP_WXS_3099178528", "name": "IDG资本", "enabled": true },
-    { "id": "MP_WXS_3094935112", "name": "源码资本", "enabled": true },
-    { "id": "MP_WXS_3073010372", "name": "创新工场", "enabled": true },
-    { "id": "MP_WXS_3698401914", "name": "Founder Park", "enabled": true },
-    { "id": "MP_WXS_1304308441", "name": "极客公园", "enabled": true },
-    { "id": "MP_WXS_3236757533", "name": "量子位", "enabled": true },
-    { "id": "MP_WXS_3073282833", "name": "机器之心", "enabled": true },
-    { "id": "MP_WXS_3271041950", "name": "新智元", "enabled": true },
-    { "id": "MP_WXS_3572959446", "name": "晚点LatePost", "enabled": true },
-    { "id": "MP_WXS_3933385225", "name": "晚点AI", "enabled": true },
-    { "id": "MP_WXS_3599245772", "name": "甲子光年", "enabled": true },
-    { "id": "MP_WXS_3220199623", "name": "42章经", "enabled": true },
-    { "id": "MP_WXS_3926568365", "name": "硅星人Pro", "enabled": true }
+    {
+      "id": "MP_WXS_3008194875",
+      "name": "红杉汇",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_2391975620",
+      "name": "纪源资本",
+      "note": "原 GGV；今日资本官方公号未检索到",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3078999138",
+      "name": "经纬创投",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_2394991041",
+      "name": "真格基金",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3975857914",
+      "name": "奇绩创坛Miracleplus",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3888004733",
+      "name": "高瓴创投",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3099178528",
+      "name": "IDG资本",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3094935112",
+      "name": "源码资本",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3073010372",
+      "name": "创新工场",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3698401914",
+      "name": "Founder Park",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_1304308441",
+      "name": "极客公园",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3236757533",
+      "name": "量子位",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3073282833",
+      "name": "机器之心",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3271041950",
+      "name": "新智元",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3572959446",
+      "name": "晚点LatePost",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3933385225",
+      "name": "晚点AI",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3599245772",
+      "name": "甲子光年",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3220199623",
+      "name": "42章经",
+      "enabled": true
+    },
+    {
+      "id": "MP_WXS_3926568365",
+      "name": "硅星人Pro",
+      "enabled": true
+    }
   ],
   "xiaohongshu": [],
-  "douyin": []
+  "douyin": [],
+  "yc": [
+    {
+      "id": "ai",
+      "name": "YC AI",
+      "path": "tags/artificial-intelligence.json",
+      "enabled": true
+    }
+  ]
 }

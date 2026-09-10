@@ -204,36 +204,7 @@ function bindEvents() {
   $("#collectBtn").addEventListener("click", collectFromSources);
   $("#collapseSourcesBtn").addEventListener("click", () => setSidebarCollapsed(true));
   $("#expandSourcesBtn").addEventListener("click", () => setSidebarCollapsed(false));
-  $("#selectAllVisibleCheckbox").addEventListener("change", (event) => selectVisibleSources(event.target.checked));
-  $("#selectAllSources").addEventListener("click", () => selectAllSources());
-  $("#invertSources").addEventListener("click", () => invertVisibleSources());
-  $("#clearAllSources").addEventListener("click", () => clearAllSources());
-  $("#sourcesList").addEventListener("change", (event) => {
-    const checkbox = event.target.closest("[data-source]");
-    if (!checkbox) return;
-    toggleSource(checkbox.dataset.source, checkbox.checked);
-  });
-  $("#sourcesList").addEventListener("click", (event) => {
-    const altBtn = event.target.closest("[data-use-alt]");
-    if (altBtn) {
-      event.preventDefault();
-      event.stopPropagation();
-      switchToAlternateSource(altBtn.dataset.useAlt, altBtn.dataset.from);
-      return;
-    }
-    if (event.target.closest("a, button, input")) return;
-    const row = event.target.closest(".source-row");
-    if (!row) return;
-    const checkbox = row.querySelector("[data-source]");
-    if (!checkbox) return;
-    checkbox.checked = !checkbox.checked;
-    toggleSource(checkbox.dataset.source, checkbox.checked);
-  });
   $("#exportBtn").addEventListener("click", () => window.open("/api/export", "_blank"));
-  $("#sourceSearch").addEventListener("input", (event) => {
-    state.sourceSearch = event.target.value.toLowerCase();
-    renderSources();
-  });
   $("#itemSearch").addEventListener("input", (event) => {
     state.itemSearch = event.target.value.toLowerCase();
     renderItems();
@@ -523,7 +494,7 @@ function renderCollectItems() {
   $("#collectInventoryCount").textContent = `${items.length} 条`;
   $("#collectItemsList").innerHTML = items.length
     ? items.map((item) => collectItemCard(item)).join("")
-    : `<section class="empty-state"><div><h3>尚无入库数据</h3><p class="hint">勾选来源、设置参数后点「开始采集」。</p></div></section>`;
+    : `<section class="empty-state"><div><h3>尚无入库数据</h3></div></section>`;
   bindItemCardActions("#collectItemsList");
 }
 
@@ -631,7 +602,7 @@ function matchesSourceAvailability(source) {
 }
 
 function collectibleSourceIds() {
-  return state.selectedSourceIds.filter((id) => isSourceCollectible(state.sources.find((entry) => entry.id === id)));
+  return state.sources.filter(source => isSourceCollectible(source) && (!["xiaohongshu", "wechat"].includes(source.id) || source.login?.loggedIn === true)).map(source => source.id);
 }
 
 function renderCollectSection() {
@@ -639,18 +610,15 @@ function renderCollectSection() {
   const rangeLabel = TIME_RANGE_LABELS[state.collectTimeRange] || state.collectTimeRange;
   const collectBtn = $("#collectBtn");
   if (collectBtn && !state.collecting) {
-    collectBtn.disabled = false;
-    collectBtn.textContent =
-      collectible.length === 0
-        ? "开始采集"
-        : `开始采集 · ${collectible.length} 源 × ${state.collectLimit} 条`;
+    collectBtn.disabled = collectible.length === 0;
+    collectBtn.textContent = "一键采集";
     collectBtn.title =
       collectible.length === 0
-        ? "请先勾选可用的来源"
+        ? "暂无可用来源，请先登录或配置"
         : `${rangeLabel} · 每源 ${state.collectLimit} 条`;
   }
   $("#collectOptionsHint").textContent = `每源 ${state.collectLimit} 条 · ${rangeLabel}`;
-  $("#sourceCountCollapsed").textContent = `${state.selectedSourceIds.length} 源`;
+  $("#sourceCountCollapsed").textContent = `${collectible.length} 源`;
 }
 
 function renderSourceSelectionStatus(message) {
@@ -779,51 +747,13 @@ function renderSourceAvailabilityTabs() {
 }
 
 function renderSources() {
-  const counts = itemCountBySource();
-  const filtered = filterSourcesList(state.sources);
-  renderSourceAvailabilityTabs();
-  $("#sourceCount").textContent = `${state.selectedSourceIds.length}/${state.sources.length}`;
-  $("#sourcesList").innerHTML = filtered.length
-    ? filtered
-        .map(
-          (source) => {
-            const collectible = isSourceCollectible(source);
-            const needsAction = isSourceUnavailable(source);
-            const statusClass = source.status === "implemented" || source.status === "configured" ? "ready" : source.status;
-            const setupHint = source.setup?.hint ? `<small>${escapeHtml(source.setup.hint)}</small>` : "";
-            return `
-        <div class="source-row ${collectible ? "collectible" : ""} ${needsAction ? "needs-action" : ""}">
-          <input type="checkbox" data-source="${source.id}" ${state.selectedSourceIds.includes(source.id) ? "checked" : ""} />
-          <span>
-            <span class="source-title">
-              <span>${escapeHtml(source.name)}</span>
-              <span class="pill ${statusClass}">${sourceStatusLabel[source.status] ?? source.status}</span>
-            </span>
-            <small>${regionText(source.region)} · 入库 ${counts[source.id] ?? 0} 条${collectible ? " · 可采集" : needsAction ? " · 需先配置" : ""}</small>
-            ${setupHint}
-            ${source.connection ? `<small>${connectionText(source)}</small>` : ""}
-            <div class="source-foot">
-              ${source.id === "xiaohongshu"
-                ? source.login?.loggedIn
-                  ? `<span class="source-login-badge">已登录</span><button type="button" class="text-btn" data-xhs-login>重新登录</button>`
-                  : `<button type="button" class="source-setup-btn" data-xhs-login>扫码登录</button>`
-                : ""}
-              ${source.id === "wechat"
-                ? source.login?.loggedIn
-                  ? `<span class="source-login-badge">已登录</span><button type="button" class="text-btn" data-wechat-login>重新登录</button>`
-                  : `<button type="button" class="source-setup-btn" data-wechat-login>扫码登录</button>`
-                : ""}
-              <a class="source-setup-btn nav-link" href="/collection.html?edit=${encodeURIComponent(source.id)}">配置</a>
-              ${source.alternateSourceId ? `<button type="button" class="text-btn" data-use-alt="${source.alternateSourceId}" data-from="${source.id}">改用 ${escapeHtml(state.sources.find(s => s.id === source.alternateSourceId)?.name || source.alternateSourceId)}</button>` : ""}
-              ${source.docs ? `<a class="text-btn" href="${escapeHtml(source.docs)}" target="_blank" rel="noopener noreferrer">文档</a>` : ""}
-            </div>
-          </span>
-        </div>`;
-          },
-        )
-        .join("")
-    : `<p class="hint">没有匹配的来源，试试放宽地区或状态筛选。</p>`;
-  updateSourceSelectAllCheckbox();
+  const loginSources = state.sources.filter(source => ["xiaohongshu", "wechat"].includes(source.id));
+  $("#sourceCount").textContent = "";
+  $("#sourcesList").innerHTML = loginSources.map(source => `
+    <div class="login-source-row">
+      <div><strong>${escapeHtml(source.name)}</strong><small>${source.login?.loggedIn ? "已登录" : "未登录"}</small></div>
+      <button type="button" class="ghost small" ${source.id === "xiaohongshu" ? "data-xhs-login" : "data-wechat-login"}>${source.login?.loggedIn ? "重新登录" : "扫码登录"}</button>
+    </div>`).join("");
 }
 
 function renderCoverage() {
@@ -1096,7 +1026,12 @@ function openDetail(id) {
         <pre class="collected-content compact-json">${escapeHtml(JSON.stringify(item.collection ?? {}, null, 2))}</pre>
       </details>
     </div>`;
-  $("#closeDrawer").addEventListener("click", () => $("#detailDrawer").classList.add("hidden"));
+  const drawer = $("#detailDrawer");
+  const closeDrawer = () => drawer.classList.add("hidden");
+  $("#closeDrawer").addEventListener("click", closeDrawer);
+  drawer.onclick = (event) => {
+    if (event.target === drawer) closeDrawer();
+  };
 }
 
 function latestFacts(item) {
@@ -1266,7 +1201,7 @@ function finishCollectUI() {
 async function collectFromSources() {
   const implemented = collectibleSourceIds();
   if (!implemented.length) {
-    toast("请先勾选支持自动采集的来源");
+    toast("暂无可用来源，请先登录账号或配置数据源");
     return;
   }
   const button = $("#collectBtn");
@@ -1304,9 +1239,7 @@ async function collectFromSources() {
     // Restore the button immediately; keep the progress chip visible briefly.
     button.disabled = false;
     button.textContent =
-      implemented.length === 0
-        ? "开始采集"
-        : `开始采集 · ${implemented.length} 源 × ${state.collectLimit} 条`;
+      "一键采集";
     hideTimer = setTimeout(() => finishCollectUI(), 1800);
     await loadState().catch((error) => {
       toast(`刷新列表失败：${error.message}`);
@@ -1397,7 +1330,7 @@ function handleCollectProgress(payload) {
   setCollectProgress({
     completed,
     total: payload.total ?? 0,
-    sourceName: payload.sourceName ?? payload.sourceId ?? "采集中",
+    sourceName: payload.phase === "start" ? `正在采集 ${payload.sourceName ?? payload.sourceId}` : payload.sourceName ?? payload.sourceId ?? "采集中",
     detail,
   });
 }

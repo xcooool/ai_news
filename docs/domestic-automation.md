@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | 小红书 | [xpzouying/xiaohongshu-mcp](https://github.com/xpzouying/xiaohongshu-mcp) | 关键词搜索、笔记正文、作者、互动指标、可打开的签名原文链接 | 启动 MCP 服务、扫码；登录过期需重新登录；不调用发布、点赞或评论接口 |
 | 微信公众号 | [cooderl/wewe-rss](https://github.com/cooderl/wewe-rss) | 从已订阅公众号自动同步 JSON Feed，保留正文与原文 | 扫码微信读书并添加公众号；不是全微信搜索；上游部分请求经过其第三方中转服务 |
-| 知乎 | [RSSHub 知乎路由](https://github.com/DIYgod/RSSHub/tree/master/lib/routes/zhihu) | 已配置作者回答等订阅自动同步 | 路由可能需要在 RSSHub 配置 `ZHIHU_COOKIES`；存在平台访问限制 |
+| 知乎 | 知乎公开热榜 API；可选 RSSHub 作者订阅 | 默认读取热榜问题标题、摘要、排名和链接，不包含回答全文 | 无订阅路由时直接读热榜；填写作者路由后使用 RSSHub，可能需要 `ZHIHU_COOKIES` |
 | 即刻 | [RSSHub 即刻路由](https://github.com/DIYgod/RSSHub/tree/master/lib/routes/jike) | 圈子或用户动态自动同步 | 配置圈子/用户 ID；读取移动网页，页面变化可能使路由失效 |
 | 抖音 | [RSSHub 抖音路由](https://github.com/DIYgod/RSSHub/tree/master/lib/routes/douyin) | 已配置博主订阅 | 需要带浏览器的 RSSHub，UID 来自用户主页；不能保证平台验证总是通过 |
 | B站 | [RSSHub B站路由](https://github.com/DIYgod/RSSHub/tree/master/lib/routes/bilibili) | 已配置订阅路由 | 根据目标在上游路由目录选取，具体路由尚未在本环境实采验证 |
@@ -42,6 +42,8 @@ WeWe RSS 按其 [Docker Compose 文档](https://github.com/cooderl/wewe-rss#-部
 镜像默认使用上游当前标签，可通过 `XHS_IMAGE` / `RSSHUB_IMAGE` 固定版本或 digest。当前执行环境没有 Docker，Compose 尚未实际启动验证。
 
 ## 配置工作台
+
+知乎不配置路由时默认直接读取公开热榜，无需启动 RSSHub。现有 NewsNow 热榜任务中的 `zhihu` 目标也直接读取知乎接口，其他平台仍使用 NewsNow。两个入口共用 `zhihuKeywords`，默认筛选 AI 相关标题和摘要，留空才采全站热榜。可从数据源页的「采集来源 → 知乎 → 配置来源」修改，首页知乎来源配置读取同一字段。过滤先于条数限制；零匹配显示暂无内容。热榜不等于全站搜索，也不代表所选时间范围内的全部问题；原始发布时间保持未知。历史已入库条目不自动删除。
 
 运行 `npm run dev`，点击“自动采集连接”，填写服务地址、关键词和订阅路由；保存后勾选对应来源，再点击“刷新真实来源”。这是一次性连接设置，不需要逐篇粘贴正文。
 

@@ -1,0 +1,772 @@
+{
+  "jike": [
+    {
+      "id": "guizang",
+      "name": "歸藏",
+      "url": "https://m.okjike.com/users/0ae2afa7-9b10-4b3a-ab7e-15fbf847038d",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true,
+      "expectedName": "歸藏"
+    },
+    {
+      "id": "lijigang",
+      "name": "李继刚",
+      "url": "https://m.okjike.com/users/752D3103-1107-43A0-BA49-20EC29D09E36",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true,
+      "expectedName": "李继刚"
+    },
+    {
+      "id": "qiaomu",
+      "name": "向阳乔木",
+      "url": "https://m.okjike.com/users/b66a780a-1572-455a-a0db-d601070d4251",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true
+    },
+    {
+      "id": "shaonan",
+      "name": "少楠Plidezus",
+      "url": "https://m.okjike.com/users/7B1385A9-FCC9-4446-B8CE-472EAF6817B2",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true
+    },
+    {
+      "id": "adam",
+      "name": "每天用AI做一件事-亚当",
+      "url": "https://m.okjike.com/users/333E5683-1F7A-4CCB-A11A-EB5AFA3E038F",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true
+    },
+    {
+      "id": "tymon",
+      "name": "Tymon唐遥民",
+      "url": "https://m.okjike.com/users/19045DBF-4322-457A-ADD9-5484CEB93EE6",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true
+    },
+    {
+      "id": "freshield",
+      "name": "freshield.eth",
+      "url": "https://m.okjike.com/users/9287fd0c-9da9-4adf-883c-bf0303d4664d",
+      "provenance": "公开主页与原帖核验",
+      "enabled": true
+    }
+  ],
+  "feeds": [
+    {
+      "id": "qbitai",
+      "name": "量子位",
+      "url": "https://www.qbitai.com/feed",
+      "focus": "中国AI媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "jiqizhixin",
+      "name": "机器之心",
+      "url": "https://www.jiqizhixin.com/rss",
+      "focus": "中国AI媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "36kr",
+      "name": "36氪",
+      "url": "https://36kr.com/feed",
+      "focus": "创投媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "huxiu",
+      "name": "虎嗅",
+      "url": "https://www.huxiu.com/rss/0.xml",
+      "focus": "创投媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "ifanr",
+      "name": "爱范儿",
+      "url": "https://www.ifanr.com/feed",
+      "focus": "中国科技媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "sspai",
+      "name": "少数派",
+      "url": "https://sspai.com/feed",
+      "focus": "中国科技媒体",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "solidot",
+      "name": "Solidot",
+      "url": "https://www.solidot.org/index.rss",
+      "focus": "中国开源资讯",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "ruanyifeng",
+      "name": "阮一峰科技爱好者周刊",
+      "url": "https://www.ruanyifeng.com/blog/atom.xml",
+      "focus": "开源发现",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "baoyu",
+      "name": "宝玉",
+      "url": "https://baoyu.io/feed.xml",
+      "focus": "AI作者",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "simonwillison",
+      "name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
+      "focus": "AI开发者",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "swyx",
+      "name": "swyx",
+      "url": "https://www.swyx.io/rss.xml",
+      "focus": "AI工程",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "latent-space",
+      "name": "Latent Space",
+      "url": "https://www.latent.space/feed",
+      "focus": "AI工程",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "interconnects",
+      "name": "Nathan Lambert / Interconnects",
+      "url": "https://www.interconnects.ai/feed",
+      "focus": "开放模型",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "sebastian",
+      "name": "Sebastian Raschka",
+      "url": "https://magazine.sebastianraschka.com/feed",
+      "focus": "开放模型",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "oneusefulthing",
+      "name": "Ethan Mollick",
+      "url": "https://www.oneusefulthing.org/feed",
+      "focus": "AI产品",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "lilianweng",
+      "name": "Lilian Weng",
+      "url": "https://lilianweng.github.io/index.xml",
+      "focus": "AI研究",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "chip-huyen",
+      "name": "Chip Huyen",
+      "url": "https://huyenchip.com/feed.xml",
+      "focus": "AI工程",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "huggingface-blog",
+      "name": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "focus": "开源模型",
+      "enabled": false,
+      "verification": "candidate_endpoint; see data/runs for live results",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "focus": "模型发布",
+      "enabled": false,
+      "verification": "candidate_endpoint; see data/runs for live results",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "googleai",
+      "name": "Google AI",
+      "url": "https://blog.google/technology/ai/rss/",
+      "focus": "模型发布",
+      "enabled": false,
+      "verification": "candidate_endpoint; see data/runs for live results",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "microsoft-research",
+      "name": "Microsoft Research",
+      "url": "https://www.microsoft.com/en-us/research/feed/",
+      "focus": "AI研究",
+      "enabled": false,
+      "verification": "candidate_endpoint; see data/runs for live results",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "techcrunch-ai",
+      "name": "TechCrunch AI",
+      "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "focus": "AI startup",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "techcrunch-startups",
+      "name": "TechCrunch Startups",
+      "url": "https://techcrunch.com/category/startups/feed/",
+      "focus": "Startup",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "venturebeat",
+      "name": "VentureBeat",
+      "url": "https://venturebeat.com/feed/",
+      "focus": "AI startup",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "sifted",
+      "name": "Sifted",
+      "url": "https://sifted.eu/feed",
+      "focus": "欧洲 startup",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "ycombinator",
+      "name": "Y Combinator",
+      "url": "https://www.ycombinator.com/blog/rss",
+      "focus": "孵化器",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "a16z",
+      "name": "a16z",
+      "url": "https://a16z.com/feed/",
+      "focus": "投资机构",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "sequoia",
+      "name": "Sequoia Capital",
+      "url": "https://www.sequoiacap.com/feed/",
+      "focus": "投资机构",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "arxiv-ai",
+      "name": "arXiv cs.AI",
+      "url": "https://rss.arxiv.org/rss/cs.AI",
+      "focus": "研究",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "arxiv-cl",
+      "name": "arXiv cs.CL",
+      "url": "https://rss.arxiv.org/rss/cs.CL",
+      "focus": "研究",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "hn-show",
+      "name": "Show HN",
+      "url": "https://hnrss.org/show",
+      "focus": "项目发布",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    },
+    {
+      "id": "producthunt-rss",
+      "name": "Product Hunt RSS",
+      "url": "https://www.producthunt.com/feed",
+      "focus": "产品发布",
+      "enabled": true,
+      "verification": "candidate_endpoint; see data/runs for live results"
+    }
+  ],
+  "x": [
+    {
+      "id": "karpathy",
+      "name": "Andrej Karpathy",
+      "handle": "karpathy",
+      "url": "https://x.com/karpathy",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "swyx",
+      "name": "swyx",
+      "handle": "swyx",
+      "url": "https://x.com/swyx",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "simonw",
+      "name": "Simon Willison",
+      "handle": "simonw",
+      "url": "https://x.com/simonw",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "ylecun",
+      "name": "Yann LeCun",
+      "handle": "ylecun",
+      "url": "https://x.com/ylecun",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "andrewyng",
+      "name": "Andrew Ng",
+      "handle": "AndrewYNg",
+      "url": "https://x.com/AndrewYNg",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "huggingface",
+      "name": "Hugging Face",
+      "handle": "huggingface",
+      "url": "https://x.com/huggingface",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "clementdelangue",
+      "name": "Clement Delangue",
+      "handle": "ClementDelangue",
+      "url": "https://x.com/ClementDelangue",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "sama",
+      "name": "Sam Altman",
+      "handle": "sama",
+      "url": "https://x.com/sama",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "anthropicai",
+      "name": "Anthropic",
+      "handle": "AnthropicAI",
+      "url": "https://x.com/AnthropicAI",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "handle": "OpenAI",
+      "url": "https://x.com/OpenAI",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "googledeepmind",
+      "name": "Google DeepMind",
+      "handle": "GoogleDeepMind",
+      "url": "https://x.com/GoogleDeepMind",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "mistralai",
+      "name": "Mistral AI",
+      "handle": "MistralAI",
+      "url": "https://x.com/MistralAI",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "qwen_lm",
+      "name": "Qwen",
+      "handle": "qwen_lm",
+      "url": "https://x.com/qwen_lm",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "deepseek_ai",
+      "name": "DeepSeek",
+      "handle": "deepseek_ai",
+      "url": "https://x.com/deepseek_ai",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "vllm_project",
+      "name": "vLLM",
+      "handle": "vllm_project",
+      "url": "https://x.com/vllm_project",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "langchainai",
+      "name": "LangChain",
+      "handle": "LangChainAI",
+      "url": "https://x.com/LangChainAI",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "llama_index",
+      "name": "LlamaIndex",
+      "handle": "llama_index",
+      "url": "https://x.com/llama_index",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "hwchase17",
+      "name": "Harrison Chase",
+      "handle": "hwchase17",
+      "url": "https://x.com/hwchase17",
+      "enabled": false,
+      "verification": "needs_api_profile_check",
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "abacaj",
+      "name": "abacaj",
+      "handle": "abacaj",
+      "url": "https://x.com/abacaj",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "rasbt",
+      "name": "Sebastian Raschka",
+      "handle": "rasbt",
+      "url": "https://x.com/rasbt",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "natolambert",
+      "name": "Nathan Lambert",
+      "handle": "natolambert",
+      "url": "https://x.com/natolambert",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "emollick",
+      "name": "Ethan Mollick",
+      "handle": "emollick",
+      "url": "https://x.com/emollick",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "levelsio",
+      "name": "Pieter Levels",
+      "handle": "levelsio",
+      "url": "https://x.com/levelsio",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "rauchg",
+      "name": "Guillermo Rauch",
+      "handle": "rauchg",
+      "url": "https://x.com/rauchg",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "ycombinator",
+      "name": "Y Combinator",
+      "handle": "ycombinator",
+      "url": "https://x.com/ycombinator",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "a16z",
+      "name": "a16z",
+      "handle": "a16z",
+      "url": "https://x.com/a16z",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "baoyu_io",
+      "name": "宝玉",
+      "handle": "baoyu_io",
+      "url": "https://x.com/baoyu_io",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "op7418",
+      "name": "歸藏",
+      "handle": "op7418",
+      "url": "https://x.com/op7418",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    },
+    {
+      "id": "lijigang_com",
+      "name": "李继刚",
+      "handle": "lijigang_com",
+      "url": "https://x.com/lijigang_com",
+      "enabled": true,
+      "verification": "needs_api_profile_check"
+    }
+  ],
+  "github_kol": [
+    {
+      "id": "karpathy",
+      "name": "karpathy",
+      "handle": "karpathy",
+      "url": "https://github.com/karpathy",
+      "enabled": true
+    },
+    {
+      "id": "huggingface",
+      "name": "huggingface",
+      "handle": "huggingface",
+      "url": "https://github.com/huggingface",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "langchain-ai",
+      "name": "langchain-ai",
+      "handle": "langchain-ai",
+      "url": "https://github.com/langchain-ai",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "run-llama",
+      "name": "run-llama",
+      "handle": "run-llama",
+      "url": "https://github.com/run-llama",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "vllm-project",
+      "name": "vllm-project",
+      "handle": "vllm-project",
+      "url": "https://github.com/vllm-project",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "sgl-project",
+      "name": "sgl-project",
+      "handle": "sgl-project",
+      "url": "https://github.com/sgl-project",
+      "enabled": true
+    },
+    {
+      "id": "qwenlm",
+      "name": "QwenLM",
+      "handle": "QwenLM",
+      "url": "https://github.com/QwenLM",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "deepseek-ai",
+      "name": "deepseek-ai",
+      "handle": "deepseek-ai",
+      "url": "https://github.com/deepseek-ai",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "microsoft",
+      "name": "microsoft",
+      "handle": "microsoft",
+      "url": "https://github.com/microsoft",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "browser-use",
+      "name": "browser-use",
+      "handle": "browser-use",
+      "url": "https://github.com/browser-use",
+      "enabled": true
+    },
+    {
+      "id": "swe-agent",
+      "name": "SWE-agent",
+      "handle": "SWE-agent",
+      "url": "https://github.com/SWE-agent",
+      "enabled": true
+    },
+    {
+      "id": "continuedev",
+      "name": "continuedev",
+      "handle": "continuedev",
+      "url": "https://github.com/continuedev",
+      "enabled": true
+    },
+    {
+      "id": "berriai",
+      "name": "BerriAI",
+      "handle": "BerriAI",
+      "url": "https://github.com/BerriAI",
+      "enabled": true
+    },
+    {
+      "id": "mem0ai",
+      "name": "mem0ai",
+      "handle": "mem0ai",
+      "url": "https://github.com/mem0ai",
+      "enabled": true
+    },
+    {
+      "id": "ollama",
+      "name": "ollama",
+      "handle": "ollama",
+      "url": "https://github.com/ollama",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "ggml-org",
+      "name": "ggml-org",
+      "handle": "ggml-org",
+      "url": "https://github.com/ggml-org",
+      "enabled": false,
+      "disabledReason": "incumbent_big_lab_or_platform"
+    },
+    {
+      "id": "comfyanonymous",
+      "name": "comfyanonymous",
+      "handle": "comfyanonymous",
+      "url": "https://github.com/comfyanonymous",
+      "enabled": true
+    },
+    {
+      "id": "hkuds",
+      "name": "HKUDS",
+      "handle": "HKUDS",
+      "url": "https://github.com/HKUDS",
+      "enabled": true
+    }
+  ],
+  "hf_spaces": [
+    {
+      "id": "trending",
+      "name": "HF Spaces Trending",
+      "enabled": true
+    }
+  ],
+  "producthunt": [
+    {
+      "id": "latest",
+      "name": "Product Hunt 最新发布",
+      "enabled": true
+    }
+  ],
+  "reddit": [
+    {
+      "id": "localllama",
+      "name": "r/LocalLLaMA",
+      "url": "https://www.reddit.com/r/LocalLLaMA/new/.rss",
+      "enabled": true
+    },
+    {
+      "id": "machinelearning",
+      "name": "r/MachineLearning",
+      "url": "https://www.reddit.com/r/MachineLearning/new/.rss",
+      "enabled": true
+    },
+    {
+      "id": "opensource",
+      "name": "r/OpenSource",
+      "url": "https://www.reddit.com/r/OpenSource/new/.rss",
+      "enabled": true
+    },
+    {
+      "id": "sideproject",
+      "name": "r/SideProject",
+      "url": "https://www.reddit.com/r/SideProject/new/.rss",
+      "enabled": true
+    },
+    {
+      "id": "saas",
+      "name": "r/SaaS",
+      "url": "https://www.reddit.com/r/SaaS/new/.rss",
+      "enabled": true
+    }
+  ],
+  "wechat": [
+    { "id": "MP_WXS_3008194875", "name": "红杉汇", "enabled": true },
+    { "id": "MP_WXS_2391975620", "name": "纪源资本", "note": "原 GGV；今日资本官方公号未检索到", "enabled": true },
+    { "id": "MP_WXS_3078999138", "name": "经纬创投", "enabled": true },
+    { "id": "MP_WXS_2394991041", "name": "真格基金", "enabled": true },
+    { "id": "MP_WXS_3975857914", "name": "奇绩创坛Miracleplus", "enabled": true },
+    { "id": "MP_WXS_3888004733", "name": "高瓴创投", "enabled": true },
+    { "id": "MP_WXS_3099178528", "name": "IDG资本", "enabled": true },
+    { "id": "MP_WXS_3094935112", "name": "源码资本", "enabled": true },
+    { "id": "MP_WXS_3073010372", "name": "创新工场", "enabled": true },
+    { "id": "MP_WXS_3698401914", "name": "Founder Park", "enabled": true },
+    { "id": "MP_WXS_1304308441", "name": "极客公园", "enabled": true },
+    { "id": "MP_WXS_3236757533", "name": "量子位", "enabled": true },
+    { "id": "MP_WXS_3073282833", "name": "机器之心", "enabled": true },
+    { "id": "MP_WXS_3271041950", "name": "新智元", "enabled": true },
+    { "id": "MP_WXS_3572959446", "name": "晚点LatePost", "enabled": true },
+    { "id": "MP_WXS_3933385225", "name": "晚点AI", "enabled": true },
+    { "id": "MP_WXS_3599245772", "name": "甲子光年", "enabled": true },
+    { "id": "MP_WXS_3220199623", "name": "42章经", "enabled": true },
+    { "id": "MP_WXS_3926568365", "name": "硅星人Pro", "enabled": true }
+  ],
+  "xiaohongshu": [],
+  "douyin": []
+}

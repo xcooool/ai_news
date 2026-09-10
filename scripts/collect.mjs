@@ -7,3 +7,4 @@ const result = await runCollectors({ sources, limit: Number(process.env.COLLECT_
 await upsertItems(result.items, result.run);
 console.log(JSON.stringify(result.run, null, 2));
 if (result.run.errors.length) process.exitCode = 1;
+import "../lib/env.mjs";

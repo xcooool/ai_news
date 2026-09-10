@@ -1,14 +1,15 @@
 {
   "xhsBaseUrl": "http://127.0.0.1:18060",
-  "weweBaseUrl": "http://127.0.0.1:4000",
-  "rsshubBaseUrl": "http://127.0.0.1:1200",
-  "keywords": ["AI", "智能体", "大模型", "开源"],
+  "weweBaseUrl": "",
+  "rsshubBaseUrl": "",
+  "keywords": ["ai github", "ai startup", "ai startup hiring", "ai hot github"],
+  "xhsKeywords": ["ai github", "ai startup", "ai startup hiring", "ai hot github"],
   "wechatFeedIds": ["all"],
   "routes": {
     "zhihu": [],
     "jike": [],
     "douyin": [],
     "bilibili": [],
-    "36kr": []
+    "36kr": ["/36kr/newsflashes", "/36kr/information/web_recommend"]
   }
 }

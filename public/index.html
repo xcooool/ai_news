@@ -3,122 +3,211 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI 潜力监测工作台</title>
+    <title>AI 潜力监测</title>
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/styles.css" />
-  </head>
+  <link rel="stylesheet" href="/analysis.css" />
+  <link rel="stylesheet" href="/chat.css" />
+</head>
   <body>
     <div id="app">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">AI 开源项目 / 创业公司潜力监测</p>
-          <h1>发现下一个值得销售触达和技术跟进的 AI 项目</h1>
+        <div class="topbar-brand">
+          <h1>AI 潜力监测</h1>
         </div>
+        <nav class="phase-nav" role="tablist" aria-label="工作阶段">
+          <button id="phaseCollectBtn" class="phase-tab active" data-phase="collect" type="button">① 采集</button>
+          <button id="phaseAnalyzeBtn" class="phase-tab" data-phase="analyze" type="button">② 分析</button>
+        </nav>
         <div class="top-actions">
-          <button id="connectionsBtn" class="ghost">自动采集连接</button>
-          <button id="refreshBtn" class="primary">刷新真实来源</button>
-          <button id="exportBtn" class="ghost">导出 JSON</button>
+          <button id="collectBtn" class="primary collect-header-btn" type="button">开始采集</button>
+          <div id="collectProgress" class="collect-progress hidden" aria-live="polite">
+            <div class="progress-ring" aria-hidden="true">
+              <svg viewBox="0 0 36 36">
+                <circle class="progress-ring-bg" cx="18" cy="18" r="15.9155" />
+                <circle id="progressRingFill" class="progress-ring-fill" cx="18" cy="18" r="15.9155" />
+              </svg>
+              <span id="progressFraction" class="progress-fraction">0/0</span>
+            </div>
+            <div class="progress-copy">
+              <strong id="progressSourceName">采集中</strong>
+              <span id="progressDetail">准备开始…</span>
+            </div>
+          </div>
+          <button id="exportBtn" class="ghost">导出</button>
+          <a href="/collection.html" class="nav-link">数据源配置</a>
         </div>
       </header>
 
-      <main class="workspace">
-        <aside class="panel sources-panel">
-          <div class="panel-head">
-            <h2>来源</h2>
-            <span id="sourceCount" class="pill"></span>
-          </div>
-          <div class="segmented" role="group" aria-label="来源地区">
-            <button data-region="all" class="active">全部</button>
-            <button data-region="china">国内</button>
-            <button data-region="overseas">海外</button>
-            <button data-region="mixed">混合</button>
-          </div>
-          <input id="sourceSearch" class="input" placeholder="搜索平台 / 状态 / env" />
-          <div id="sourcesList" class="sources-list"></div>
-        </aside>
-
-        <section class="center">
-          <section class="panel controls">
-            <div class="tabs" role="tablist">
-              <button data-type="all" class="active">全部</button>
-              <button data-type="open_source">开源项目</button>
-              <button data-type="startup">创业公司</button>
+      <!-- ── Phase 1: Collect ── -->
+      <div id="collectPhase" class="phase-view">
+        <main class="workspace">
+          <aside id="sourcesPanel" class="panel sources-panel">
+            <div class="sources-collapsed-rail">
+              <button id="expandSourcesBtn" class="sidebar-toggle" type="button" title="展开来源面板">☰</button>
+              <span id="sourceCountCollapsed" class="collapsed-badge"></span>
             </div>
-            <div class="filters">
-              <input id="itemSearch" class="input" placeholder="搜索名称、证据、来源" />
-              <select id="statusFilter" class="input">
-                <option value="all">全部状态</option>
-                <option value="new">新发现</option>
-                <option value="watching">关注</option>
-                <option value="researched">已研究</option>
-                <option value="ignored">忽略</option>
-              </select>
-              <label class="checkline">
-                <input id="sampleToggle" type="checkbox" checked />
-                显示示例
-              </label>
-            </div>
-          </section>
-
-          <section id="runBanner" class="run-banner hidden"></section>
-          <section id="itemsList" class="items-list"></section>
-        </section>
-
-        <aside class="right-rail">
-          <section class="panel">
-            <div class="panel-head">
-              <h2>权重</h2>
-              <button id="saveWeightsBtn" class="small">保存</button>
-            </div>
-            <p class="hint">基础权重是可调启发式，不是已验证预测模型；来源筛选后按证据覆盖率生成有效权重。</p>
-            <div id="weightsPanel"></div>
-          </section>
-
-          <section class="panel import-panel">
-            <div class="panel-head">
-              <h2>手动导入</h2>
-              <span id="modelBadge" class="pill"></span>
-            </div>
-            <form id="importForm">
-              <div class="two">
-                <select name="type" class="input">
-                  <option value="startup">创业公司</option>
-                  <option value="open_source">开源项目</option>
-                </select>
-                <select name="sourceId" id="importSource" class="input"></select>
+            <div class="sources-panel-body">
+              <div class="panel-head sources-panel-head">
+                <button id="collapseSourcesBtn" class="sidebar-toggle" type="button" title="折叠来源面板">‹</button>
+                <h2>采集来源</h2>
+                <span id="sourceCount" class="pill"></span>
               </div>
-              <input name="name" class="input" placeholder="项目/公司名称" required />
-              <input name="url" class="input" placeholder="来源 URL，可选" />
-              <textarea name="text" class="input" rows="7" placeholder="粘贴正文、官网、招聘、媒体报道或社区讨论" required></textarea>
-              <button class="primary full" type="submit">导入并抽取证据</button>
-            </form>
+              <div class="source-flow-hint">
+                <div class="flow-step"><span class="flow-num">1</span><span>勾选要拉数据的来源</span></div>
+                <div class="flow-step"><span class="flow-num">2</span><span>设置<strong>条数</strong>和<strong>时间段</strong></span></div>
+                <div class="flow-step"><span class="flow-num">3</span><span>点「开始采集」写入本地库</span></div>
+              </div>
+              <section class="source-section collect-options-section">
+                <h3>采集参数</h3>
+                <label class="field-label">
+                  每个来源拉取
+                  <select id="collectLimit" class="input">
+                    <option value="12">12 条</option>
+                    <option value="24">24 条</option>
+                    <option value="50">50 条</option>
+                    <option value="100">100 条</option>
+                  </select>
+                </label>
+                <label class="field-label">
+                  时间段
+                  <select id="collectTimeRange" class="input">
+                    <option value="1h">近 1 小时</option>
+                    <option value="1d">近 1 天</option>
+                    <option value="1w">近 1 周</option>
+                    <option value="30d">近 30 天</option>
+                    <option value="90d" selected>近 90 天</option>
+                    <option value="all">不限</option>
+                  </select>
+                </label>
+                <p id="collectOptionsHint" class="hint">GitHub 按创建时间、HN 按发帖时间、RSS/社交按发布时间过滤。</p>
+              </section>
+              <section class="source-section">
+                <div class="source-section-head">
+                  <h3>来源列表</h3>
+                </div>
+                <div class="source-select-bar">
+                  <label class="source-select-all">
+                    <input id="selectAllVisibleCheckbox" type="checkbox" />
+                    <span>全选当前</span>
+                  </label>
+                  <div class="source-select-actions">
+                    <button id="selectAllSources" class="ghost small" type="button">全选全部</button>
+                    <button id="invertSources" class="ghost small" type="button">反选</button>
+                    <button id="clearAllSources" class="ghost small" type="button">清空</button>
+                  </div>
+                </div>
+                <div class="segmented source-availability" role="group" aria-label="来源可用性">
+                  <button data-availability="all" class="active" type="button">全部</button>
+                  <button data-availability="ready" type="button">可用</button>
+                  <button data-availability="unavailable" type="button">需配置</button>
+                </div>
+                <div class="segmented" role="group" aria-label="来源地区">
+                  <button data-region="all" class="active" type="button">全部</button>
+                  <button data-region="china" type="button">国内</button>
+                  <button data-region="overseas" type="button">海外</button>
+                  <button data-region="mixed" type="button">混合</button>
+                </div>
+                <div class="search-input">
+                  <span class="search-icon">⌕</span>
+                  <input id="sourceSearch" class="input" placeholder="搜索平台…" />
+                </div>
+                <div id="sourcesList" class="sources-list"></div>
+                <p id="sourceSelectionStatus" class="source-selection-status"></p>
+              </section>
+            </div>
+          </aside>
+
+          <section class="center collect-center">
+            <section class="panel controls collect-controls">
+              <div class="collect-panel-head">
+                <div>
+                  <h2>入库数据</h2>
+                  <p class="hint">采集阶段展示全部入库条目，不做潜力筛选。切换到「分析」阶段进行评分与过滤。</p>
+                </div>
+                <span id="collectInventoryCount" class="pill"></span>
+              </div>
+              <div class="filter-row">
+                <div class="search-input">
+                  <span class="search-icon">⌕</span>
+                  <input id="collectItemSearch" class="input" placeholder="搜索名称、来源…" />
+                </div>
+                <div id="collectSourceCombobox" class="combobox" data-key="collectItemSource"></div>
+              </div>
+            </section>
+            <section id="runBanner" class="run-banner hidden"></section>
+            <section id="collectItemsList" class="items-list collect-items-list"></section>
           </section>
-        </aside>
-      </main>
+
+          <aside class="right-rail collect-rail">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>入库概况</h2>
+                <span id="coverageTotal" class="pill"></span>
+              </div>
+              <p class="hint">按来源地区统计当前全部入库条目。</p>
+              <div id="coveragePanel"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h2>上次采集</h2></div>
+              <div id="lastRunPanel" class="hint">尚无采集记录</div>
+            </section>
+          </aside>
+        </main>
+      </div>
+
+      <!-- ── Phase 2: Analyze ── -->
+      <div id="analyzePhase" class="phase-view hidden">
+        <main class="workspace analyze-workspace">
+          <section class="center analyze-center">
+            <section class="panel controls analyze-controls">
+              <div class="analyze-toolbar">
+                <div class="tabs" role="tablist">
+                  <button data-type="all" class="active">全部</button>
+                  <button data-type="open_source">开源项目</button>
+                  <button data-type="startup">创业公司</button>
+                  <button data-type="lead">待识别线索</button>
+                </div>
+                <div class="search-input analyze-search">
+                  <span class="search-icon">⌕</span>
+                  <input id="itemSearch" class="input" placeholder="搜索…" />
+                </div>
+                <span id="filterSummary" class="analyze-count"></span>
+              </div>
+            </section>
+            <section id="itemsList" class="items-list analyze-items"></section>
+          </section>
+        </main>
+      </div>
 
       <section id="detailDrawer" class="drawer hidden" aria-live="polite"></section>
-      <dialog id="connectionsDialog" class="connections-dialog">
-        <div class="panel-head"><h2>自动采集连接</h2><button id="closeConnections" class="ghost" type="button">关闭</button></div>
-        <form id="connectionsForm">
-          <label>搜索与筛选关键词<textarea name="keywords" class="input" rows="3" placeholder="每行一个关键词"></textarea></label>
-          <label>小红书 MCP 服务地址<input name="xhsBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:18060" /></label>
-          <p class="hint">小红书服务需先扫码登录。<a href="https://github.com/xpzouying/xiaohongshu-mcp" target="_blank" rel="noopener noreferrer">项目与登录说明</a></p>
-          <label>WeWe RSS 服务地址<input name="weweBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:4000" /></label>
-          <label>公众号订阅 ID<textarea name="wechatFeedIds" class="input" rows="2" placeholder="all 或每行一个订阅 ID"></textarea></label>
-          <p class="hint">在 WeWe RSS 扫码并添加公众号后自动更新。<a href="https://github.com/cooderl/wewe-rss" target="_blank" rel="noopener noreferrer">项目与订阅说明</a></p>
-          <label>RSSHub 服务地址<input name="rsshubBaseUrl" class="input" type="url" placeholder="http://127.0.0.1:1200" /></label>
-          <label>知乎作者主页或订阅路由<textarea name="zhihu" class="input" rows="2" placeholder="https://www.zhihu.com/people/作者ID"></textarea></label>
-          <label>即刻圈子、用户主页或订阅路由<textarea name="jike" class="input" rows="2" placeholder="https://web.okjike.com/topic/圈子ID"></textarea></label>
-          <label>抖音博主主页或订阅路由<textarea name="douyin" class="input" rows="2" placeholder="https://www.douyin.com/user/用户ID"></textarea></label>
-          <label>B站订阅路由<textarea name="bilibili" class="input" rows="2" placeholder="每行一个 /bilibili/ 开头的订阅路由"></textarea></label>
-          <label>36氪订阅路由<textarea name="36kr" class="input" rows="2" placeholder="每行一个 /36kr/ 开头的订阅路由"></textarea></label>
-          <p class="hint"><a href="https://github.com/DIYgod/RSSHub" target="_blank" rel="noopener noreferrer">RSSHub 路由与部署说明</a> · 登录 Cookie 在采集服务中配置。</p>
-          <p id="connectionsError" class="hint" role="alert"></p>
-          <button type="submit" class="primary">保存连接</button>
-        </form>
+      <dialog id="xhsQrDialog" class="xhs-qr-dialog">
+        <div class="panel-head">
+          <h2>小红书扫码登录</h2>
+          <button id="closeXhsQr" class="ghost" type="button">关闭</button>
+        </div>
+        <p id="xhsQrMessage" class="hint">正在请求登录二维码…</p>
+        <div id="xhsQrSpinner" class="xhs-qr-spinner" aria-hidden="true"></div>
+        <img id="xhsQrImage" class="xhs-qr-image" alt="小红书登录二维码" hidden />
+        <div class="xhs-qr-actions">
+          <button id="xhsQrRetry" class="ghost hidden" type="button">重新获取二维码</button>
+        </div>
+      </dialog>
+      <dialog id="wechatQrDialog" class="xhs-qr-dialog">
+        <div class="panel-head">
+          <h2>微信公众号扫码登录</h2>
+          <button id="closeWechatQr" class="ghost" type="button">关闭</button>
+        </div>
+        <p id="wechatQrMessage" class="hint">正在请求登录二维码…</p>
+        <div id="wechatQrSpinner" class="xhs-qr-spinner" aria-hidden="true"></div>
+        <img id="wechatQrImage" class="xhs-qr-image" alt="微信公众号登录二维码" hidden />
+        <div class="xhs-qr-actions">
+          <button id="wechatQrRetry" class="ghost hidden" type="button">重新获取二维码</button>
+        </div>
       </dialog>
       <div id="toast" class="toast hidden"></div>
     </div>
     <script type="module" src="/app.js"></script>
+    <script type="module" src="/chat.js"></script>
   </body>
 </html>

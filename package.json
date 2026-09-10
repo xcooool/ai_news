@@ -9,12 +9,22 @@
   "scripts": {
     "dev": "node server.mjs",
     "start": "node server.mjs",
+    "setup": "node scripts/setup.mjs",
+    "up": "node scripts/setup.mjs && node server.mjs",
     "collect": "node scripts/collect.mjs",
     "connectors:configure": "node scripts/configure-connectors.mjs",
+    "sources:status": "node scripts/source-status.mjs",
+    "import:social": "node scripts/import-social.mjs",
+    "xhs:qrcode": "node scripts/xhs-qrcode.mjs",
+    "xhs:status": "node scripts/xhs-status.mjs",
     "preview": "node scripts/preview.mjs",
     "build": "node scripts/validate.mjs",
-    "test": "node --test"
+    "test": "node --test test/*.test.mjs"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "croner": "^9.1.0",
+    "fast-xml-parser": "^5.11.1",
+    "p-queue": "^8.1.1",
+    "undici": "^7.29.1"
+  }
 }

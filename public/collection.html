@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>数据源配置 · AI 潜力监测</title>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/collection.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">AI NEWS · 支撑能力</p>
+      <h1>数据源配置</h1>
+    </div>
+    <div class="top-actions">
+      <a class="nav-link" href="/">← 返回潜力分析</a>
+      <a class="nav-link" href="/api/platform/export">导出原始数据</a>
+    </div>
+  </header>
+  <main class="collection-main">
+    <div class="intro-line">
+      <p>在此配置每个来源的采集目标与定时策略。回到首页勾选来源后点「开始采集」执行；启用定时后服务保持运行时会自动采集。</p>
+      <span id="queue-state" class="pill">加载中</span>
+    </div>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <section class="panel collection-section">
+      <div class="panel-head">
+        <div>
+          <h2>采集来源</h2>
+          <p class="muted">与首页来源列表一一对应。此处只配置，不执行采集。</p>
+        </div>
+        <span class="pill">Asia/Shanghai</span>
+      </div>
+      <div class="table-scroll">
+        <table class="tasks-table source-config-table">
+          <thead>
+            <tr>
+              <th>来源</th>
+              <th>采集目标</th>
+              <th>定时</th>
+              <th>操作</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody id="sources"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel collection-section">
+      <div class="panel-head"><h2>运行记录</h2></div>
+      <div id="runs"></div>
+    </section>
+  </main>
+  <dialog id="edit-dialog">
+    <form id="edit-form">
+      <div class="panel-head">
+        <h2 id="edit-title">编辑来源</h2>
+        <button type="button" class="ghost" data-close="edit-dialog">关闭</button>
+      </div>
+      <input type="hidden" name="sourceId">
+      <div class="form-row">
+        <label>定时策略
+          <select class="input" name="schedule" id="edit-schedule"></select>
+        </label>
+        <label>每目标条数<input class="input" name="limit" type="number" min="1" max="100" value="12" required></label>
+      </div>
+      <label class="checkline"><input type="checkbox" name="scheduleEnabled">启用定时采集</label>
+      <div id="edit-fields"></div>
+      <div id="edit-login" class="setup-extra-actions"></div>
+      <p id="edit-error" class="error" role="alert"></p>
+      <button type="submit" class="primary">保存</button>
+    </form>
+  </dialog>
+  <dialog id="qr-dialog">
+    <div class="panel-head"><h2 id="qr-title">扫码登录</h2><button class="ghost" data-close="qr-dialog">关闭</button></div>
+    <p id="qr-message">正在请求二维码…</p>
+    <img id="qr-image" alt="登录二维码" hidden>
+  </dialog>
+  <script type="module" src="/collection.js"></script>
+</body>
+</html>

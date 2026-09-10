@@ -5,7 +5,7 @@
 | GitHub | 已实现可采集 | `GITHUB_TOKEN` 可选 | https://docs.github.com/en/rest/search/search | repository 搜索、star、fork、created/pushed 时间 | star/fork 不是用户、收入或下游集成 |
 | Hacker News / Show HN | 已实现可采集 | 无 | https://github.com/HackerNews/API 与 HN Algolia | story 搜索、points、comments、URL | points/comments 只是早期兴趣 |
 | Hugging Face | 已实现可采集 | `HF_TOKEN` 可选 | https://huggingface.co/docs/hub/api | 模型搜索、downloads、likes | downloads 需排除批量实验下载 |
-| Product Hunt | 缺 API key | `PRODUCTHUNT_TOKEN` | https://api.producthunt.com/v2/docs | launch、upvotes、comments | 需要 token；launch 热度不等于留存 |
+| Product Hunt | 缺 API key | `PRODUCTHUNT_TOKEN` | https://www.producthunt.com/v2/oauth/applications | launch、upvotes、comments | 登录 Product Hunt → API dashboard 创建应用 → 复制 Developer token 到 `.env`；launch 热度不等于留存 |
 | Reddit | 缺 API key | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` | https://www.reddit.com/dev/api/ | subreddit/post/comment | OAuth、速率限制、营销噪声 |
 | X / Twitter | 需商业授权 | `X_BEARER_TOKEN` | https://developer.x.com/en/docs | tweet/search/engagement，取决于套餐 | 成本和反爬限制高，bot/转发噪声高 |
 | 微信公众号文章 | 自动适配已实现，待服务配置 | 无 | https://github.com/cooderl/wewe-rss | 订阅公众号 JSON Feed、正文与 URL | 首次登录与订阅；部分请求经上游第三方中转 |

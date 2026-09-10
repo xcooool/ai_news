@@ -30,14 +30,14 @@ const HOST = process.env.HOST || "0.0.0.0";
 const isRailway = Boolean(
   process.env.RAILWAY_ENVIRONMENT ||
     process.env.RAILWAY_ENVIRONMENT_NAME ||
+    process.env.RAILWAY_ENVIRONMENT_ID ||
     process.env.RAILWAY_PROJECT_ID ||
     process.env.RAILWAY_SERVICE_ID ||
     process.env.RAILWAY_STATIC_URL ||
     process.env.RAILWAY_PUBLIC_DOMAIN,
 );
-// Sidecars (WeRSS / XHS) are local-only unless explicitly enabled.
-const enableLocalServices =
-  process.env.ENABLE_LOCAL_SERVICES === "1" || (!isRailway && process.env.ENABLE_LOCAL_SERVICES !== "0");
+// Sidecars only when explicitly enabled (local `npm run dev` sets this).
+const enableLocalServices = process.env.ENABLE_LOCAL_SERVICES === "1";
 const prepared = await prepareRuntime({ startServices: enableLocalServices });
 if (enableLocalServices) {
   if (prepared.services?.wechat?.state === "missing") {
@@ -45,9 +45,17 @@ if (enableLocalServices) {
   } else if (prepared.services?.wechat?.state && prepared.services.wechat.state !== "running") {
     console.warn(`微信公众号 WeRSS: ${prepared.services.wechat.state}${prepared.services.wechat.message ? ` — ${prepared.services.wechat.message}` : ""}`);
   }
-} else if (isRailway) {
-  console.log(`Railway-compatible bind ${HOST}:${PORT}; local sidecars disabled.`);
 }
+console.log(
+  JSON.stringify({
+    event: "server_boot",
+    host: HOST,
+    port: PORT,
+    isRailway,
+    enableLocalServices,
+    node: process.version,
+  }),
+);
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const platform = new CollectionPlatform({ runCollectors, upsertItems });
 
@@ -74,7 +82,8 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`AI News Potential Monitor listening on ${HOST}:${server.address().port}`);
+  const addr = server.address();
+  console.log(`AI News Potential Monitor listening on ${typeof addr === "object" && addr ? `${addr.address}:${addr.port}` : `${HOST}:${PORT}`}`);
 });
 
 async function handleApi(request, response, url) {

@@ -7,10 +7,10 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "node server.mjs",
+    "dev": "ENABLE_LOCAL_SERVICES=1 node server.mjs",
     "start": "node server.mjs",
     "setup": "node scripts/setup.mjs",
-    "up": "node scripts/setup.mjs && node server.mjs",
+    "up": "node scripts/setup.mjs && ENABLE_LOCAL_SERVICES=1 node server.mjs",
     "collect": "node scripts/collect.mjs",
     "connectors:configure": "node scripts/configure-connectors.mjs",
     "sources:status": "node scripts/source-status.mjs",

@@ -49,7 +49,8 @@ test("intent-matching news without anchor becomes hotnews", () => {
 
 test("github intent queries include startup and oss bands", () => {
   const queries = githubIntentQueries({ days: 30, minStars: 5, maxStars: 1000 });
-  assert.equal(queries.length, 2);
-  assert.match(queries[0], /open source/);
-  assert.match(queries[1], /ai startup/);
+  assert.equal(queries.length, 3);
+  assert.match(queries[1], /open source/);
+  assert.match(queries[2], /ai startup/);
+  for (const query of queries) assert.ok((query.match(/\b(?:AND|OR|NOT)\b/g) || []).length <= 5);
 });

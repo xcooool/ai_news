@@ -35,6 +35,40 @@ test("generic jike comment without intent is dropped", () => {
   assert.equal(applyIntentClassification(item), null);
 });
 
+test("jike lifestyle post without project anchor is dropped", () => {
+  const item = {
+    name: "少楠Plidezus",
+    tagline: "关于中国经济的读书清单",
+    urls: ["https://m.okjike.com/originalPosts/2"],
+    content: { text: "推荐几本书，和 AI 创业无关。" },
+    collection: { sourceId: "jike" },
+  };
+  assert.equal(applyIntentClassification(item), null);
+});
+
+test("zhihu hotlist ai game chatter is dropped", () => {
+  const item = {
+    name: "既然 AI 一分钟就能开发出像消消乐这样的游戏，为什么排行榜上还是老游戏？",
+    tagline: "热榜摘要",
+    urls: ["https://www.zhihu.com/question/1"],
+    content: { text: "AI 游戏开发讨论" },
+    collection: { sourceId: "zhihu" },
+  };
+  assert.equal(applyIntentClassification(item), null);
+});
+
+test("zhihu entry with github anchor is kept as open_source", () => {
+  const item = {
+    name: "这个 ai startup 开源了 agent 框架",
+    tagline: "github.com/acme/agent",
+    urls: ["https://www.zhihu.com/question/2"],
+    content: { text: "团队把仓库放在 https://github.com/acme/agent" },
+    collection: { sourceId: "zhihu", outboundLinks: ["https://github.com/acme/agent"] },
+  };
+  const kept = applyIntentClassification(item);
+  assert.equal(kept.type, "open_source");
+});
+
 test("intent-matching news without anchor becomes hotnews", () => {
   const item = {
     name: "AI startup 融资观察",

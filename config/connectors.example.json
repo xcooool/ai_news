@@ -4,16 +4,17 @@
   "rsshubBaseUrl": "",
   "keywords": [
     "ai github",
+    "ai hot github",
     "ai startup",
     "ai startup hiring",
-    "ai hot github",
-    "AI",
-    "agent",
-    "llm",
-    "开源"
+    "github.com",
+    "开源项目",
+    "创业团队",
+    "融资",
+    "团队"
   ],
-  "xhsKeywords": ["ai github", "ai startup", "ai startup hiring", "ai hot github"],
-  "zhihuKeywords": ["AI", "agent", "llm", "开源", "智能体", "大模型"],
+  "xhsKeywords": ["ai github", "ai hot github", "ai startup", "ai startup hiring", "github.com", "开源项目", "创业团队"],
+  "zhihuKeywords": ["ai github", "ai hot github", "ai startup", "ai startup hiring", "github.com", "开源项目", "创业团队", "融资"],
   "wechatFeedIds": ["all"],
   "routes": {
     "zhihu": [],

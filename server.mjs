@@ -11,7 +11,7 @@ import path from "node:path";
 import { runCollectors, extractManualMaterial } from "./lib/collectors.mjs";
 import { sourceCatalog, implementedSourceIds } from "./lib/sources.mjs";
 import { defaultWeights, openSourceDimensions, scoreItems, startupDimensions, kimiDimensions } from "./lib/scoring.mjs";
-import { importMaterial, mergeBaselineIntoStore, readStore, updateItemStatus, updateSettings, upsertItems } from "./lib/store.mjs";
+import { importMaterial, mergeBaselineIntoStore, purgeSampleItems, readStore, updateItemStatus, updateSettings, upsertItems } from "./lib/store.mjs";
 import { baselineStoreInfo, loadBaselineStore } from "./lib/baseline-store.mjs";
 import { readConnectors, saveConnectors, catalogWithConnections, withXhsLogin, withWechatLogin } from "./lib/connectors.mjs";
 import { CollectionPlatform } from "./lib/platform.mjs";
@@ -77,9 +77,15 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, async () => {
   const addr = server.address();
   console.log(`AI News Potential Monitor listening on ${typeof addr === "object" && addr ? `${addr.address}:${addr.port}` : `${HOST}:${PORT}`}`);
+  try {
+    const { removed } = await purgeSampleItems();
+    if (removed) console.log(`已从数据库移除 ${removed} 条示例记录`);
+  } catch (error) {
+    console.warn(`清理示例记录失败：${error.message}`);
+  }
 });
 
 async function handleApi(request, response, url) {

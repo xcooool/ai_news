@@ -27,7 +27,7 @@ const state = {
   hideUnknown: false,
   itemSearch: "",
   sourceSearch: "",
-  samples: true,
+  samples: false,
   excludeIncumbents: true,
   initialized: false,
   openCombobox: null,

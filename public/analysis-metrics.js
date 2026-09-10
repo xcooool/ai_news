@@ -74,11 +74,15 @@ export function isMissingCompanyValue(value){return value==null||value===''||/^(
 export function hasBusinessFacts(item){return item.type==='startup'&&Boolean((item.company?.fundingStage&&item.company.fundingStage!=='undisclosed')||(item.company?.productStatus&&item.company.productStatus!=='undisclosed')||(item.company?.profitStatus&&item.company.profitStatus!=='undisclosed'));}
 export function researchLabel(item){return ({not_started:'待调研',queued:'调研排队中',running:'调研中',done:'已调研',partial:'调研部分完成',error:'调研失败，可重试',needs_config:'调研需配置',interrupted:'调研中断，可重试'})[item.research?.status||'not_started']||'待调研';}
 
-// Creation time is a fixed field; do not hide it with optional business metrics.
+// Founding time only — never fall back to local collection / sighting timestamps.
 export function companyTimeRows(item) {
  const founded=item.company?.founded;
- if(!isMissingCompanyValue(founded))return [['创建时间',founded]];
- const earliest=kind=>(item.mentions||[]).filter(m=>m.kind===kind&&Number.isFinite(Date.parse(m.at))).map(m=>m.at).sort((a,b)=>Date.parse(a)-Date.parse(b))[0]?.slice(0,10);
- const fallback=earliest('publish')||earliest('sighting')||item.company?.firstSeen||'待核实';
- return [['创建时间',fallback]];
+ if(!isMissingCompanyValue(founded))return [['成立时间',founded]];
+ const batch=item.metrics?.batch||item.company?.batch;
+ if(batch&&!isMissingCompanyValue(batch))return [['成立时间',`${batch}（YC 批次）`]];
+ const earliestPublish=(item.mentions||[])
+   .filter(m=>m.kind==='publish'&&Number.isFinite(Date.parse(m.at)))
+   .map(m=>m.at).sort((a,b)=>Date.parse(a)-Date.parse(b))[0]?.slice(0,10);
+ if(earliestPublish)return [['首次公开',earliestPublish]];
+ return [['成立时间','待核实']];
 }

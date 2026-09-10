@@ -15,7 +15,7 @@ const cardMeta=i=>{
   const bits=[i.company?.fundingKnown?i.company.funding:null, i.metrics.teamSize!=null?`团队 ${i.metrics.teamSize}`:null,i.metrics.companyStatus,esc(i.sourceIds.map(sourceName).join(' · ')),i.type==='startup'?null:`覆盖 ${Math.round(i.scoring.coverage*100)}%`].filter(Boolean);
   return bits.join(' · ');
 };
-const companyTimeHtml=i=>{const [,value='待核实']=companyTimeRows(i)[0]||[];return `<p class="company-time"><span class="company-time-label">创建时间：</span><b class="company-time-value">${esc(value)}</b></p>`;};
+const companyTimeHtml=i=>{const [label='成立时间',value='待核实']=companyTimeRows(i)[0]||[];return `<p class="company-time"><span class="company-time-label">${esc(label)}：</span><b class="company-time-value">${esc(value)}</b></p>`;};
 const quickAssessmentBlock=i=>{const qa=quickAssessment(i);if(i.type==='startup'&&!qa.reason&&qa.label==='待调研')return'';return qa.reason?`<div class="quick-assessment"><b>${qa.label}</b><span>${esc(qa.reason)}</span></div>`:`<div class="quick-assessment"><b>${qa.label}</b></div>`;};
 const researchDone=s=>['done','partial','error','interrupted','needs_config'].includes(s);
 const cardPrimaryCta=i=>{

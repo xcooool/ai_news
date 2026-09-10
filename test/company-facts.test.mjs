@@ -29,10 +29,11 @@ test('existing reports follow exact original directory URLs after a website iden
  const item=buildAnalysis({items:[{id:'a',name:'Acme',type:'startup',urls:[url],collection:{sourceId:'yc',raw:{website:'https://acme.example/',batch:'Winter 2025',status:'Active'}}}]},{research:{[id]:{funding:[{...cited(null),round:'Seed',amount:'$4M'}]}}}).items[0];
  assert.equal(item.researchReportId,id);assert.equal(item.company.fundingStage,'seed');
 });
-test('creation time is a single field with collection fallback when founding is unknown',async()=>{
+test('founding time never uses local collection sightings',async()=>{
  const {companyTimeRows}=await import('../public/analysis-metrics.js');
- assert.deepEqual(companyTimeRows({company:{founded:'2023'}}),[['创建时间','2023']]);
- assert.deepEqual(companyTimeRows({company:{founded:'未披露'},mentions:[{kind:'publish',at:'2026-03-09T12:00:00Z'},{kind:'sighting',at:'2026-09-09T12:00:00Z'}]}),[['创建时间','2026-03-09']]);
- assert.deepEqual(companyTimeRows({mentions:[{kind:'sighting',at:'2026-09-09T12:00:00Z'}]}),[['创建时间','2026-09-09']]);
- assert.deepEqual(companyTimeRows({}),[['创建时间','待核实']]);
+ assert.deepEqual(companyTimeRows({company:{founded:'2023'}}),[['成立时间','2023']]);
+ assert.deepEqual(companyTimeRows({metrics:{batch:'Summer 2025'}}),[['成立时间','Summer 2025（YC 批次）']]);
+ assert.deepEqual(companyTimeRows({company:{founded:'未披露'},mentions:[{kind:'publish',at:'2026-03-09T12:00:00Z'},{kind:'sighting',at:'2026-09-09T12:00:00Z'}]}),[['首次公开','2026-03-09']]);
+ assert.deepEqual(companyTimeRows({mentions:[{kind:'sighting',at:'2026-09-09T12:00:00Z'}]}),[['成立时间','待核实']]);
+ assert.deepEqual(companyTimeRows({}),[['成立时间','待核实']]);
 });

@@ -30,12 +30,14 @@ function configured() {
 }
 
 test("domestic sources are automatic but not falsely marked connected", () => {
-  for (const id of ["wechat", "xiaohongshu", "zhihu", "jike", "douyin", "bilibili", "36kr"]) {
+  for (const id of ["wechat", "xiaohongshu", "zhihu", "jike", "bilibili", "36kr"]) {
     assert.ok(implementedSourceIds().includes(id));
     const source = catalogWithConnections(sourceCatalog, defaultConnectors()).find(x => x.id === id);
     assert.equal(source.status, id === "jike" ? "implemented" : id === "zhihu" ? "configured" : "needs_setup");
     assert.equal(source.connection.state, "not_tested");
   }
+  assert.ok(!implementedSourceIds().includes("douyin"));
+  assert.equal(catalogWithConnections(sourceCatalog, defaultConnectors()).find((x) => x.id === "douyin").status, "needs_setup");
 });
 
 test("connector validation rejects credentials, escaped routes and unbounded inputs", () => {

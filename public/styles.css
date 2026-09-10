@@ -1644,6 +1644,14 @@ textarea.input {
   opacity: 0.65;
 }
 
+.coverage-archived-tag {
+  margin-left: 6px;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
 .coverage-head-wrap,
 .inventory-count-wrap,
 .coverage-total-wrap {

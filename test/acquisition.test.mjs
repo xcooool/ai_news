@@ -70,6 +70,16 @@ test("X handles missing credentials and author timeline pagination", async () =>
     }, config);
     assert.equal(calls, 3); assert.equal(result.items.length, 2);
     assert.equal(JSON.stringify(result.items).includes("test-secret"), false);
+    process.env.X_MODE = "embed";
+    const blocked = await collectAcquisition("x", 5, async (input) => {
+      const url = new URL(input);
+      assert.ok(!url.hostname.includes("syndication.twitter.com"), "must not fall back to embed when token is set");
+      if (url.pathname.includes("by/username")) {
+        return new Response("", { status: 402, statusText: "Payment Required" });
+      }
+      return response({});
+    }, config);
+    assert.equal(blocked.targetResults[0].status, "needs_credits");
   } finally {
     if (old === undefined) delete process.env.X_BEARER_TOKEN; else process.env.X_BEARER_TOKEN = old;
     if (oldPages === undefined) delete process.env.X_MAX_PAGES; else process.env.X_MAX_PAGES = oldPages;

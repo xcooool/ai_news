@@ -830,6 +830,15 @@ function renderSources() {
   renderSourceSelectionStatus(`已选 ${collectibleSourceIds().length} 个来源`);
 }
 
+function coverageSourcesForRegion(region, counts) {
+  const collectible = new Set(collectibleSources().map((source) => source.id));
+  return state.sources.filter((source) => {
+    if (source.region !== region) return false;
+    if ((counts[source.id] ?? 0) > 0) return true;
+    return collectible.has(source.id);
+  });
+}
+
 function renderCoverage() {
   const counts = itemCountBySource();
   const regions = [
@@ -837,9 +846,8 @@ function renderCoverage() {
     ["overseas", "海外来源"],
     ["mixed", "混合来源"],
   ];
-  const visibleSourceIds = new Set(collectibleSources().map((source) => source.id));
   const rows = regions.map(([region, label]) => {
-    const sources = state.sources.filter((source) => source.region === region && visibleSourceIds.has(source.id));
+    const sources = coverageSourcesForRegion(region, counts);
     if (!sources.length) return "";
     const itemTotal = sources.reduce((sum, source) => sum + (counts[source.id] ?? 0), 0);
     const withData = sources.filter((source) => (counts[source.id] ?? 0) > 0).length;
@@ -854,7 +862,8 @@ function renderCoverage() {
           ${sources
             .map((source) => {
               const n = counts[source.id] ?? 0;
-              return `<div class="coverage-row ${n ? "ok" : "empty"}" data-source-id="${source.id}"><span>${escapeHtml(source.name)}</span><span class="coverage-count">${n} 条</span></div>`;
+              const archived = n > 0 && !collectibleSources().some((entry) => entry.id === source.id);
+              return `<div class="coverage-row ${n ? "ok" : "empty"}${archived ? " archived" : ""}" data-source-id="${source.id}"><span>${escapeHtml(source.name)}${archived ? '<em class="coverage-archived-tag">历史入库</em>' : ""}</span><span class="coverage-count">${n} 条</span></div>`;
             })
             .join("")}
         </div>
@@ -1180,10 +1189,13 @@ function summarizeRunErrors(errors) {
   const parts = [...groups.values()].map((group) => {
     const name = state.sources.find((source) => source.id === group.sourceId)?.name || group.sourceId || "未知来源";
     if (group.code === "rate_limited") {
+      if (group.sourceId === "x") {
+        return `${name} 官方 API 限流 ${group.count} 次（HTTP 429）。请减少 watchlist 账号数、保持 X_MAX_PAGES=1，或稍后再试；库存数据不受影响`;
+      }
       return `${name} 被上游限流 ${group.count} 次（HTTP 429）。公开接口配额打满，稍后再试；库存数据不受影响`;
     }
     if (group.code === "needs_credits" || group.message?.includes("HTTP 402")) {
-      return `${name}：官方 API 需付费套餐或额度（HTTP 402，不是 429）×${group.count}。可删 X_BEARER_TOKEN 或设 X_MODE=embed 走公开嵌入`;
+      return `${name}：官方 API 套餐或额度不足（HTTP 402）×${group.count}。请确认 Developer 档为 Basic 且 Token 有读 timeline 权限`;
     }
     if (group.code === "skipped_rate_limit") {
       return `${name} 因限流跳过 ${group.count} 个目标`;
@@ -1295,7 +1307,10 @@ async function loadBaselineStore() {
     button.disabled = true;
     button.textContent = "合并中…";
     const result = await fetchJson("/api/store/load-baseline", { method: "POST" });
-    toast(`已加载原始数据库：新增 ${result.added} 条，合并 ${result.merged} 条，现有 ${result.after} 条。`);
+    const sourceHint = result.bySource?.length
+      ? `（${result.bySource.slice(0, 6).map((row) => `${row.name} +${row.added}`).join("、")}${result.bySource.length > 6 ? "…" : ""}）`
+      : "";
+    toast(`已加载原始数据库：新增 ${result.added} 条，合并 ${result.merged} 条，现有 ${result.after} 条${sourceHint}。`);
     await loadState();
     await renderAnalysis({ type: state.type, search: state.itemSearch, reset: () => { state.type = "all"; state.itemSearch = ""; } });
   } catch (error) {

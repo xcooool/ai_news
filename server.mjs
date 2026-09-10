@@ -24,20 +24,29 @@ import { resolveXhsQrcode } from "./lib/xhs-login.mjs";
 import { werssLoginState, resolveWerssQrcode } from "./lib/werss-auth.mjs";
 
 const PORT = Number(process.env.PORT || 3000);
+// Always bind publicly so Railway/Docker edge proxies can reach the process.
+// Override with HOST=127.0.0.1 only when you intentionally want local-only bind.
+const HOST = process.env.HOST || "0.0.0.0";
 const isRailway = Boolean(
-  process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_PROJECT_ID || process.env.RAILWAY_SERVICE_ID,
+  process.env.RAILWAY_ENVIRONMENT ||
+    process.env.RAILWAY_ENVIRONMENT_NAME ||
+    process.env.RAILWAY_PROJECT_ID ||
+    process.env.RAILWAY_SERVICE_ID ||
+    process.env.RAILWAY_STATIC_URL ||
+    process.env.RAILWAY_PUBLIC_DOMAIN,
 );
-const HOST = process.env.HOST || (isRailway ? "0.0.0.0" : "127.0.0.1");
-// Railway has no local WeRSS / XHS binaries; skip sidecar auto-start.
-const prepared = await prepareRuntime({ startServices: !isRailway });
-if (!isRailway) {
+// Sidecars (WeRSS / XHS) are local-only unless explicitly enabled.
+const enableLocalServices =
+  process.env.ENABLE_LOCAL_SERVICES === "1" || (!isRailway && process.env.ENABLE_LOCAL_SERVICES !== "0");
+const prepared = await prepareRuntime({ startServices: enableLocalServices });
+if (enableLocalServices) {
   if (prepared.services?.wechat?.state === "missing") {
     console.warn("微信公众号 WeRSS 未安装，跳过自动启动。");
   } else if (prepared.services?.wechat?.state && prepared.services.wechat.state !== "running") {
     console.warn(`微信公众号 WeRSS: ${prepared.services.wechat.state}${prepared.services.wechat.message ? ` — ${prepared.services.wechat.message}` : ""}`);
   }
-} else {
-  console.log("Railway detected: binding 0.0.0.0 and skipping local sidecar services.");
+} else if (isRailway) {
+  console.log(`Railway-compatible bind ${HOST}:${PORT}; local sidecars disabled.`);
 }
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const platform = new CollectionPlatform({ runCollectors, upsertItems });
@@ -50,6 +59,10 @@ async function sourcesWithLogin(storeRuns) {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host}`);
+    if (request.method === "GET" && url.pathname === "/healthz") {
+      sendJson(response, 200, { ok: true });
+      return;
+    }
     if (url.pathname.startsWith("/api/")) {
       await handleApi(request, response, url);
       return;
@@ -61,7 +74,7 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`AI News Potential Monitor running at http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${server.address().port}`);
+  console.log(`AI News Potential Monitor listening on ${HOST}:${server.address().port}`);
 });
 
 async function handleApi(request, response, url) {

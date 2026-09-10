@@ -205,6 +205,7 @@ function bindEvents() {
   $("#collapseSourcesBtn").addEventListener("click", () => setSidebarCollapsed(true));
   $("#expandSourcesBtn").addEventListener("click", () => setSidebarCollapsed(false));
   $("#exportBtn").addEventListener("click", () => window.open("/api/export", "_blank"));
+  $("#loadBaselineBtn").addEventListener("click", loadBaselineStore);
   $("#itemSearch").addEventListener("input", (event) => {
     state.itemSearch = event.target.value.toLowerCase();
     renderItems();
@@ -1196,6 +1197,35 @@ function endCollectUI() {
 function finishCollectUI() {
   endCollectUI();
   renderCollectSection();
+}
+
+async function loadBaselineStore() {
+  const button = $("#loadBaselineBtn");
+  if (button.disabled) return;
+  try {
+    const info = await fetchJson("/api/store/baseline");
+    if (!info.available) {
+      toast("未找到原始数据库文件，请先在本机运行 npm run baseline:export 并部署。");
+      return;
+    }
+    const when = info.exportedAt ? info.exportedAt.slice(0, 10) : "未知日期";
+    const ok = window.confirm(
+      `将合并仓库内的原始数据库（${info.items} 条，导出于 ${when}）到当前入库数据。\n\n` +
+        `当前非示例条目：${info.currentItems} 条。相同 ID 会合并 facts/证据，不会整库覆盖。\n\n继续？`,
+    );
+    if (!ok) return;
+    button.disabled = true;
+    button.textContent = "合并中…";
+    const result = await fetchJson("/api/store/load-baseline", { method: "POST" });
+    toast(`已加载原始数据库：新增 ${result.added} 条，合并 ${result.merged} 条，现有 ${result.after} 条。`);
+    await loadState();
+    await renderAnalysis({ type: state.type, search: state.itemSearch, reset: () => { state.type = "all"; state.itemSearch = ""; } });
+  } catch (error) {
+    toast(`加载失败：${error.message}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = "加载原始数据库";
+  }
 }
 
 async function collectFromSources() {

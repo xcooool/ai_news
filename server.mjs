@@ -11,7 +11,8 @@ import path from "node:path";
 import { runCollectors, extractManualMaterial } from "./lib/collectors.mjs";
 import { sourceCatalog, implementedSourceIds } from "./lib/sources.mjs";
 import { defaultWeights, openSourceDimensions, scoreItems, startupDimensions, kimiDimensions } from "./lib/scoring.mjs";
-import { importMaterial, readStore, updateItemStatus, updateSettings, upsertItems } from "./lib/store.mjs";
+import { importMaterial, mergeBaselineIntoStore, readStore, updateItemStatus, updateSettings, upsertItems } from "./lib/store.mjs";
+import { baselineStoreInfo, loadBaselineStore } from "./lib/baseline-store.mjs";
 import { readConnectors, saveConnectors, catalogWithConnections, withXhsLogin, withWechatLogin } from "./lib/connectors.mjs";
 import { CollectionPlatform } from "./lib/platform.mjs";
 import { buildSourceConfigView, saveSourceConfig } from "./lib/source-config.mjs";
@@ -184,6 +185,38 @@ async function handleApi(request, response, url) {
       return sendJson(response, 404, { error: '接口不存在' });
     } catch (error) { return sendJson(response, 400, { error: error.message, code: error.code }); }
   }
+  if (request.method === "GET" && url.pathname === "/api/store/baseline") {
+    try {
+      const info = await baselineStoreInfo();
+      const store = await readStore();
+      return sendJson(response, 200, {
+        ...info,
+        currentItems: store.items.filter((item) => !item.sampleMode).length,
+        mergedAt: store.settings?.baselineMergedAt || null,
+      });
+    } catch (error) {
+      return sendJson(response, 400, { error: error.message });
+    }
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/store/load-baseline") {
+    try {
+      const baseline = await loadBaselineStore();
+      if (!baseline?.items?.length) {
+        return sendJson(response, 404, { error: "未找到原始数据库文件（config/baseline-store.json.gz）" });
+      }
+      const result = await mergeBaselineIntoStore(baseline.items);
+      return sendJson(response, 200, {
+        ...result,
+        baselineItems: baseline.items.length,
+        exportedAt: baseline.exportedAt || baseline.updatedAt || null,
+        label: baseline.label || "原始数据库",
+      });
+    } catch (error) {
+      return sendJson(response, 400, { error: error.message });
+    }
+  }
+
   if (request.method === "GET" && url.pathname === "/api/state") {
     const store = await readStore();
     const selectedSourceIds = parseCsv(url.searchParams.get("sources")) || store.settings.selectedSourceIds;

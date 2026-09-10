@@ -18,6 +18,7 @@
     "xhs:qrcode": "node scripts/xhs-qrcode.mjs",
     "xhs:status": "node scripts/xhs-status.mjs",
     "preview": "node scripts/preview.mjs",
+    "baseline:export": "node scripts/export-baseline-store.mjs",
     "build": "node scripts/validate.mjs",
     "test": "node --test test/*.test.mjs"
   },

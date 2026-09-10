@@ -81,6 +81,19 @@ test("zhihu entry with github anchor is kept as open_source", () => {
   assert.equal(kept.type, "open_source");
 });
 
+test("x timeline keeps every fetched tweet even without intent keywords", () => {
+  const item = {
+    name: "Just had coffee",
+    tagline: "Lovely morning in SF",
+    urls: ["https://x.com/author/status/1"],
+    content: { text: "Lovely morning in SF" },
+    collection: { sourceId: "x", mode: "x_api_v2" },
+  };
+  const kept = applyIntentClassification(item);
+  assert.ok(kept);
+  assert.equal(kept.type, "hotnews");
+});
+
 test("intent-matching news without anchor becomes hotnews", () => {
   const item = {
     name: "AI startup 融资观察",

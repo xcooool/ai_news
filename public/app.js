@@ -534,19 +534,28 @@ function renderLastRun(run) {
     ${errors}`;
 }
 
+function collectItemBody(item) {
+  const full = String(item.content?.text || "").trim();
+  if (item.collection?.sourceId === "x" && full) return full;
+  return item.tagline || "";
+}
+
 function collectItemCard(item) {
   const source = state.sources.find((entry) => entry.id === item.collection?.sourceId);
   const primaryUrl = item.sampleMode ? null : (item.urls ?? []).map(safeUrl).find(Boolean);
   const facts = latestFacts(item).slice(0, 4);
+  const body = collectItemBody(item);
+  const isX = item.collection?.sourceId === "x";
   return `
-    <article class="item-card collect-card">
+    <article class="item-card collect-card${isX ? " collect-card-x" : ""}">
       <div>
         <div class="item-title">
           <h3>${primaryUrl ? externalLink(primaryUrl, item.name) : escapeHtml(item.name)}</h3>
           ${source ? `<span class="pill">${escapeHtml(source.name)}</span>` : ""}
+          ${isX && item.collection?.mode === "x_api_v2" ? '<span class="pill ready">API 全文</span>' : ""}
           ${item.sampleMode ? '<span class="pill commercial">示例</span>' : ""}
         </div>
-        <p>${escapeHtml(item.tagline)}</p>
+        <p class="${isX ? "collect-x-body" : ""}">${escapeHtml(body)}</p>
         <div class="meta">入库 ${dateText(item.discoveredAt)} · 更新 ${dateText(item.lastSeenAt)}</div>
         <div class="fact-grid">
           ${

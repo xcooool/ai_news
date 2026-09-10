@@ -178,6 +178,12 @@ a {
   border-left: 1px solid var(--line);
 }
 
+.collect-card-x .collect-x-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
 .collect-items-list .item-card {
   opacity: 0.96;
 }

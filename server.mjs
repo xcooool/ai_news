@@ -24,11 +24,20 @@ import { resolveXhsQrcode } from "./lib/xhs-login.mjs";
 import { werssLoginState, resolveWerssQrcode } from "./lib/werss-auth.mjs";
 
 const PORT = Number(process.env.PORT || 3000);
-const prepared = await prepareRuntime({ startServices: true });
-if (prepared.services?.wechat?.state === "missing") {
-  console.warn("微信公众号 WeRSS 未安装，跳过自动启动。");
-} else if (prepared.services?.wechat?.state && prepared.services.wechat.state !== "running") {
-  console.warn(`微信公众号 WeRSS: ${prepared.services.wechat.state}${prepared.services.wechat.message ? ` — ${prepared.services.wechat.message}` : ""}`);
+const isRailway = Boolean(
+  process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_PROJECT_ID || process.env.RAILWAY_SERVICE_ID,
+);
+const HOST = process.env.HOST || (isRailway ? "0.0.0.0" : "127.0.0.1");
+// Railway has no local WeRSS / XHS binaries; skip sidecar auto-start.
+const prepared = await prepareRuntime({ startServices: !isRailway });
+if (!isRailway) {
+  if (prepared.services?.wechat?.state === "missing") {
+    console.warn("微信公众号 WeRSS 未安装，跳过自动启动。");
+  } else if (prepared.services?.wechat?.state && prepared.services.wechat.state !== "running") {
+    console.warn(`微信公众号 WeRSS: ${prepared.services.wechat.state}${prepared.services.wechat.message ? ` — ${prepared.services.wechat.message}` : ""}`);
+  }
+} else {
+  console.log("Railway detected: binding 0.0.0.0 and skipping local sidecar services.");
 }
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const platform = new CollectionPlatform({ runCollectors, upsertItems });
@@ -51,8 +60,8 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`AI News Potential Monitor running at http://localhost:${server.address().port}`);
+server.listen(PORT, HOST, () => {
+  console.log(`AI News Potential Monitor running at http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${server.address().port}`);
 });
 
 async function handleApi(request, response, url) {

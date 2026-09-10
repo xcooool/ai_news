@@ -24,20 +24,15 @@ import { resolveXhsQrcode } from "./lib/xhs-login.mjs";
 import { werssLoginState, resolveWerssQrcode } from "./lib/werss-auth.mjs";
 
 const PORT = Number(process.env.PORT || 3000);
-// Always bind publicly so Railway/Docker edge proxies can reach the process.
-// Override with HOST=127.0.0.1 only when you intentionally want local-only bind.
-const HOST = process.env.HOST || "0.0.0.0";
-const isRailway = Boolean(
-  process.env.RAILWAY_ENVIRONMENT ||
-    process.env.RAILWAY_ENVIRONMENT_NAME ||
-    process.env.RAILWAY_ENVIRONMENT_ID ||
-    process.env.RAILWAY_PROJECT_ID ||
-    process.env.RAILWAY_SERVICE_ID ||
-    process.env.RAILWAY_STATIC_URL ||
-    process.env.RAILWAY_PUBLIC_DOMAIN,
-);
-// Sidecars only when explicitly enabled (local `npm run dev` sets this).
+// Never bind loopback on cloud: Railway Variables sometimes set HOST=localhost.
+function resolveListenHost() {
+  const raw = String(process.env.HOST || "0.0.0.0").trim();
+  if (!raw || raw === "localhost" || raw === "127.0.0.1" || raw === "::1") return "0.0.0.0";
+  return raw;
+}
+const HOST = resolveListenHost();
 const enableLocalServices = process.env.ENABLE_LOCAL_SERVICES === "1";
+console.log("DEPLOY_MARK=railway-v3-20260910");
 const prepared = await prepareRuntime({ startServices: enableLocalServices });
 if (enableLocalServices) {
   if (prepared.services?.wechat?.state === "missing") {
@@ -51,7 +46,7 @@ console.log(
     event: "server_boot",
     host: HOST,
     port: PORT,
-    isRailway,
+    hostEnv: process.env.HOST || null,
     enableLocalServices,
     node: process.version,
   }),

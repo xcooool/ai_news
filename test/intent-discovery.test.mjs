@@ -57,6 +57,18 @@ test("zhihu hotlist ai game chatter is dropped", () => {
   assert.equal(applyIntentClassification(item), null);
 });
 
+test("jike agent share can stay as hotnews when keywords match", () => {
+  const item = {
+    name: "新 agent 框架发布",
+    tagline: "开源仓库已公开",
+    urls: ["https://m.okjike.com/originalPosts/3"],
+    content: { text: "团队发布了一个新的 agent 工具，欢迎试用。" },
+    collection: { sourceId: "jike" },
+  };
+  const kept = applyIntentClassification(item);
+  assert.equal(kept.type, "hotnews");
+});
+
 test("zhihu entry with github anchor is kept as open_source", () => {
   const item = {
     name: "这个 ai startup 开源了 agent 框架",
